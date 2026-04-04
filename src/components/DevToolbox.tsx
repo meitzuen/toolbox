@@ -7,7 +7,8 @@ import {
   Fingerprint, 
   Clock, 
   Lock,
-  Check
+  Check,
+  ListFilter
 } from 'lucide-react';
 
 import JwtDecoder from './tools/JwtDecoder';
@@ -17,8 +18,9 @@ import JsonFormatter from './tools/JsonFormatter';
 import UuidGenerator from './tools/UuidGenerator';
 import TimestampTool from './tools/TimestampTool';
 import PasswordGenerator from './tools/PasswordGenerator';
+import FindDuplicates from './tools/FindDuplicates';
 
-type ToolType = 'jwt' | 'list-comp' | 'regex' | 'json' | 'uuid' | 'timestamp' | 'password';
+type ToolType = 'jwt' | 'list-comp' | 'regex' | 'json' | 'uuid' | 'timestamp' | 'password' | 'duplicates';
 
 const DevToolbox: React.FC = () => {
   const [activeTool, setActiveTool] = useState<ToolType>('jwt');
@@ -43,6 +45,7 @@ const DevToolbox: React.FC = () => {
       items: [
         { id: 'json', label: 'JSON Formatter', icon: FileJson },
         { id: 'list-comp', label: 'List Comparator', icon: Columns },
+        { id: 'duplicates', label: 'Find Duplicates', icon: ListFilter },
         { id: 'regex', label: 'Regex Validator', icon: SearchCode },
       ]
     },
@@ -94,6 +97,7 @@ const DevToolbox: React.FC = () => {
         <div className="max-w-4xl mx-auto">
           {activeTool === 'jwt' && <JwtDecoder />}
           {activeTool === 'list-comp' && <ListComparator />}
+          {activeTool === 'duplicates' && <FindDuplicates />}
           {activeTool === 'regex' && <RegexValidator />}
           {activeTool === 'json' && <JsonFormatter />}
           {activeTool === 'uuid' && <UuidGenerator onCopy={handleCopy} copyStatus={copyStatus} />}
