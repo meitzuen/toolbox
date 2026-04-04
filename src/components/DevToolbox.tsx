@@ -30,14 +30,29 @@ const DevToolbox: React.FC = () => {
     setTimeout(() => setCopyStatus(null), 2000);
   };
 
-  const menuItems = [
-    { id: 'jwt', label: 'JWT Decoder', icon: ShieldCheck },
-    { id: 'list-comp', label: 'List Comparator', icon: Columns },
-    { id: 'regex', label: 'Regex Validator', icon: SearchCode },
-    { id: 'json', label: 'JSON Formatter', icon: FileJson },
-    { id: 'uuid', label: 'UUID Gen', icon: Fingerprint },
-    { id: 'timestamp', label: 'Timestamp', icon: Clock },
-    { id: 'password', label: 'Password Gen', icon: Lock },
+  const toolGroups = [
+    {
+      title: 'Security & Auth',
+      items: [
+        { id: 'jwt', label: 'JWT Decoder', icon: ShieldCheck },
+        { id: 'password', label: 'Password Code', icon: Lock },
+      ]
+    },
+    {
+      title: 'Data & Format',
+      items: [
+        { id: 'json', label: 'JSON Formatter', icon: FileJson },
+        { id: 'list-comp', label: 'List Comparator', icon: Columns },
+        { id: 'regex', label: 'Regex Validator', icon: SearchCode },
+      ]
+    },
+    {
+      title: 'Generators',
+      items: [
+        { id: 'uuid', label: 'UUID', icon: Fingerprint },
+        { id: 'timestamp', label: 'Timestamp', icon: Clock },
+      ]
+    }
   ];
 
   return (
@@ -49,20 +64,27 @@ const DevToolbox: React.FC = () => {
             <SearchCode size={24} /> DevTools
           </h1>
         </div>
-        <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
-          {menuItems.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => setActiveTool(item.id as ToolType)}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
-                activeTool === item.id 
-                ? 'bg-indigo-50 text-indigo-600 font-medium' 
-                : 'text-slate-500 hover:bg-slate-100'
-              }`}
-            >
-              <item.icon size={18} />
-              {item.label}
-            </button>
+        <nav className="flex-1 p-4 space-y-6 overflow-y-auto pt-6">
+          {toolGroups.map((group) => (
+            <div key={group.title} className="space-y-1">
+              <h3 className="px-4 text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">
+                {group.title}
+              </h3>
+              {group.items.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => setActiveTool(item.id as ToolType)}
+                  className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${
+                    activeTool === item.id 
+                    ? 'bg-indigo-50 text-indigo-600 font-medium' 
+                    : 'text-slate-500 hover:bg-slate-100'
+                  }`}
+                >
+                  <item.icon size={18} />
+                  <span className="text-sm">{item.label}</span>
+                </button>
+              ))}
+            </div>
           ))}
         </nav>
       </aside>
