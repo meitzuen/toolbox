@@ -1,73 +1,71 @@
-# React + TypeScript + Vite
+# DevToolBox
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+DevToolBox is a comprehensive suite of essential utilities designed to streamline common tasks for software developers. Built with a modern tech stack, it provides a fast and responsive interface for everyday development needs.
 
-Currently, two official plugins are available:
+## 🚀 Key Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+The toolbox includes a variety of specialized tools:
+- **JSON Formatter:** Quickly format and prettify JSON data.
+- **JWT Decoder:** Decode and inspect JSON Web Tokens locally.
+- **UUID Generator:** Generate unique identifiers (v4) with ease.
+- **Password Generator:** Create secure, customizable passwords.
+- **Timestamp Converter:** Convert between Unix timestamps and human-readable dates.
+- **Regex Validator:** Test and debug regular expressions in real-time.
+- **Find Duplicates:** Identify and manage duplicate entries in lists.
+- **List Comparator:** Compare two lists to find differences and commonalities.
 
-## React Compiler
+## 🛠️ Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Framework:** [React 19](https://react.dev/)
+- **Language:** [TypeScript](https://www.typescriptlang.org/)
+- **Bundler:** [Vite](https://vitejs.dev/)
+- **Styling:** [Tailwind CSS](https://tailwindcss.com/)
+- **Icons:** [Lucide React](https://lucide.dev/)
+- **Deployment:** [Firebase Hosting](https://firebase.google.com/docs/hosting)
 
-## Expanding the ESLint configuration
+## 🏁 Getting Started
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Prerequisites
+Make sure you have [Node.js](https://nodejs.org/) installed on your machine.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### Installation
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+1. **Clone the repository:**
+   ```bash
+   git clone <repository-url>
+   cd toolbox
+   ```
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+### Running Locally
+
+To start the development server and preview the app:
+```bash
+npm run dev
+```
+Open [http://localhost:5173](http://localhost:5173) in your browser.
+
+## 📦 Building and Deployment
+
+### Build for Production
+To create an optimized production build:
+```bash
+npm run build
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Deploy to Firebase
+1. **Login to Firebase (one-time setup):**
+   ```bash
+   npx firebase login
+   ```
+2. **Deploy the application:**
+   ```bash
+   npx firebase deploy
+   ```
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## 🤝 Contributing
+Contributions are welcome! Feel free to open an issue or submit a pull request if you have ideas for new tools or improvements.
