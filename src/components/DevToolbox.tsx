@@ -8,7 +8,8 @@ import {
   Clock, 
   Lock,
   Check,
-  ListFilter
+  ListFilter,
+  Link2
 } from 'lucide-react';
 
 import JwtDecoder from './tools/JwtDecoder';
@@ -19,8 +20,9 @@ import UuidGenerator from './tools/UuidGenerator';
 import TimestampTool from './tools/TimestampTool';
 import PasswordGenerator from './tools/PasswordGenerator';
 import FindDuplicates from './tools/FindDuplicates';
+import UrlCombinationGenerator from './tools/UrlCombinationGenerator';
 
-type ToolType = 'jwt' | 'list-comp' | 'regex' | 'json' | 'uuid' | 'timestamp' | 'password' | 'duplicates';
+type ToolType = 'jwt' | 'list-comp' | 'regex' | 'json' | 'uuid' | 'timestamp' | 'password' | 'duplicates' | 'url-gen';
 
 const DevToolbox: React.FC = () => {
   const [activeTool, setActiveTool] = useState<ToolType>('jwt');
@@ -54,6 +56,7 @@ const DevToolbox: React.FC = () => {
       items: [
         { id: 'uuid', label: 'UUID', icon: Fingerprint },
         { id: 'timestamp', label: 'Timestamp', icon: Clock },
+        { id: 'url-gen', label: 'URL Combinator', icon: Link2 },
       ]
     }
   ];
@@ -103,6 +106,7 @@ const DevToolbox: React.FC = () => {
           {activeTool === 'uuid' && <UuidGenerator onCopy={handleCopy} copyStatus={copyStatus} />}
           {activeTool === 'timestamp' && <TimestampTool />}
           {activeTool === 'password' && <PasswordGenerator onCopy={handleCopy} copyStatus={copyStatus} />}
+          {activeTool === 'url-gen' && <UrlCombinationGenerator onCopy={handleCopy} copyStatus={copyStatus} />}
         </div>
       </main>
 
