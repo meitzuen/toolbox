@@ -16,13 +16,14 @@ import JwtDecoder from './tools/JwtDecoder';
 import ListComparator from './tools/ListComparator';
 import RegexValidator from './tools/RegexValidator';
 import JsonFormatter from './tools/JsonFormatter';
+import JsonFieldExtractor from './tools/JsonFieldExtractor';
 import UuidGenerator from './tools/UuidGenerator';
 import TimestampTool from './tools/TimestampTool';
 import PasswordGenerator from './tools/PasswordGenerator';
 import FindDuplicates from './tools/FindDuplicates';
 import UrlCombinationGenerator from './tools/UrlCombinationGenerator';
 
-type ToolType = 'jwt' | 'list-comp' | 'regex' | 'json' | 'uuid' | 'timestamp' | 'password' | 'duplicates' | 'url-gen';
+type ToolType = 'jwt' | 'list-comp' | 'regex' | 'json' | 'json-extractor' | 'uuid' | 'timestamp' | 'password' | 'duplicates' | 'url-gen';
 
 const DevToolbox: React.FC = () => {
   const [activeTool, setActiveTool] = useState<ToolType>('jwt');
@@ -46,6 +47,7 @@ const DevToolbox: React.FC = () => {
       title: 'Data & Format',
       items: [
         { id: 'json', label: 'JSON Formatter', icon: FileJson },
+        { id: 'json-extractor', label: 'JSON Extractor', icon: ListFilter },
         { id: 'list-comp', label: 'List Comparator', icon: Columns },
         { id: 'duplicates', label: 'Find Duplicates', icon: ListFilter },
         { id: 'regex', label: 'Regex Validator', icon: SearchCode },
@@ -103,6 +105,7 @@ const DevToolbox: React.FC = () => {
           {activeTool === 'duplicates' && <FindDuplicates />}
           {activeTool === 'regex' && <RegexValidator />}
           {activeTool === 'json' && <JsonFormatter />}
+          {activeTool === 'json-extractor' && <JsonFieldExtractor onCopy={handleCopy} copyStatus={copyStatus} />}
           {activeTool === 'uuid' && <UuidGenerator onCopy={handleCopy} copyStatus={copyStatus} />}
           {activeTool === 'timestamp' && <TimestampTool />}
           {activeTool === 'password' && <PasswordGenerator onCopy={handleCopy} copyStatus={copyStatus} />}
