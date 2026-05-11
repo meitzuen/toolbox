@@ -45,11 +45,17 @@ const DevToolbox: React.FC = () => {
       ]
     },
     {
+      title: 'API & Networking',
+      items: [
+        { id: 'postman-beautifier', label: 'Postman Beautifier', icon: FileJson },
+        { id: 'url-gen', label: 'URL Combinator', icon: Link2 },
+      ]
+    },
+    {
       title: 'Data & Format',
       items: [
         { id: 'json', label: 'JSON Formatter', icon: FileJson },
         { id: 'json-extractor', label: 'JSON Extractor', icon: ListFilter },
-        { id: 'postman-beautifier', label: 'Postman Beautifier', icon: FileJson },
         { id: 'list-comp', label: 'List Comparator', icon: Columns },
         { id: 'duplicates', label: 'Find Duplicates', icon: ListFilter },
         { id: 'regex', label: 'Regex Validator', icon: SearchCode },
@@ -60,7 +66,6 @@ const DevToolbox: React.FC = () => {
       items: [
         { id: 'uuid', label: 'UUID', icon: Fingerprint },
         { id: 'timestamp', label: 'Timestamp', icon: Clock },
-        { id: 'url-gen', label: 'URL Combinator', icon: Link2 },
       ]
     }
   ];

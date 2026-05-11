@@ -77,7 +77,7 @@ const PostmanBeautifier: React.FC = () => {
       const exec = event.script.exec;
       const code = Array.isArray(exec) ? exec.join('\n') : exec;
       const formatted = beautify.js(code, {
-        indent_size: 2,
+        indent_size: 4,
         space_in_empty_paren: true,
         preserve_newlines: true,
         break_chained_methods: false,
@@ -93,7 +93,7 @@ const PostmanBeautifier: React.FC = () => {
         const raw = item.request.body.raw;
         if (raw) {
           const parsed = JSON.parse(raw) as unknown;
-          item.request.body.raw = JSON.stringify(parsed, null, 2);
+          item.request.body.raw = JSON.stringify(parsed, null, 4);
         }
       } catch {
         // Skip if not valid JSON
@@ -141,7 +141,7 @@ const PostmanBeautifier: React.FC = () => {
   const downloadCollection = () => {
     if (!collection) return;
 
-    const blob = new Blob([JSON.stringify(collection, null, 2)], { type: 'application/json' });
+    const blob = new Blob([JSON.stringify(collection, null, 4)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
@@ -174,7 +174,7 @@ const PostmanBeautifier: React.FC = () => {
             type="file"
             id="collection-upload"
             className="hidden"
-            accept=".json"
+            accept=".json,.postman_collection"
             onChange={handleFileUpload}
           />
           <label htmlFor="collection-upload" className="cursor-pointer flex flex-col items-center gap-3">
@@ -185,7 +185,7 @@ const PostmanBeautifier: React.FC = () => {
               <p className="font-medium text-slate-800">
                 {fileName || 'Click to upload or drag and drop'}
               </p>
-              <p className="text-sm text-slate-500">Postman Collection .json</p>
+              <p className="text-sm text-slate-500">Postman Collection .json or .postman_collection</p>
             </div>
           </label>
         </div>
@@ -237,7 +237,7 @@ const PostmanBeautifier: React.FC = () => {
       <div className="bg-slate-100 p-4 rounded-lg text-xs text-slate-500 leading-relaxed">
         <h4 className="font-bold text-slate-700 mb-2 uppercase tracking-wider">What it does:</h4>
         <ul className="list-disc ml-4 space-y-1">
-          <li>Formats <code className="bg-slate-200 px-1 rounded">raw</code> JSON request bodies with 2-space indentation.</li>
+          <li>Formats <code className="bg-slate-200 px-1 rounded">raw</code> JSON request bodies with 4-space indentation.</li>
           <li>Beautifies <code className="bg-slate-200 px-1 rounded">Pre-request</code> and <code className="bg-slate-200 px-1 rounded">Tests</code> scripts using js-beautify.</li>
           <li>Traverses all folders and nested items recursively.</li>
           <li>Handles top-level collection scripts.</li>
