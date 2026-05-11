@@ -17,13 +17,15 @@ import ListComparator from './tools/ListComparator';
 import RegexValidator from './tools/RegexValidator';
 import JsonFormatter from './tools/JsonFormatter';
 import JsonFieldExtractor from './tools/JsonFieldExtractor';
+import PostmanBeautifier from './tools/PostmanBeautifier';
+import PostmanResequencer from './tools/PostmanResequencer';
 import UuidGenerator from './tools/UuidGenerator';
 import TimestampTool from './tools/TimestampTool';
 import PasswordGenerator from './tools/PasswordGenerator';
 import FindDuplicates from './tools/FindDuplicates';
 import UrlCombinationGenerator from './tools/UrlCombinationGenerator';
 
-type ToolType = 'jwt' | 'list-comp' | 'regex' | 'json' | 'json-extractor' | 'uuid' | 'timestamp' | 'password' | 'duplicates' | 'url-gen';
+type ToolType = 'jwt' | 'list-comp' | 'regex' | 'json' | 'json-extractor' | 'postman-beautifier' | 'postman-resequencer' | 'uuid' | 'timestamp' | 'password' | 'duplicates' | 'url-gen';
 
 const DevToolbox: React.FC = () => {
   const [activeTool, setActiveTool] = useState<ToolType>('jwt');
@@ -37,14 +39,22 @@ const DevToolbox: React.FC = () => {
 
   const toolGroups = [
     {
-      title: 'Security & Auth',
+      title: 'Auth & Password',
       items: [
         { id: 'jwt', label: 'JWT Decoder', icon: ShieldCheck },
         { id: 'password', label: 'Password Code', icon: Lock },
       ]
     },
     {
-      title: 'Data & Format',
+      title: 'Postman Tools',
+      items: [
+        { id: 'postman-beautifier', label: 'Postman Beautifier', icon: FileJson },
+        { id: 'postman-resequencer', label: 'Postman Resequencer', icon: ListFilter },
+        { id: 'url-gen', label: 'URL Combinator', icon: Link2 },
+      ]
+    },
+    {
+      title: 'Data Processing',
       items: [
         { id: 'json', label: 'JSON Formatter', icon: FileJson },
         { id: 'json-extractor', label: 'JSON Extractor', icon: ListFilter },
@@ -58,7 +68,6 @@ const DevToolbox: React.FC = () => {
       items: [
         { id: 'uuid', label: 'UUID', icon: Fingerprint },
         { id: 'timestamp', label: 'Timestamp', icon: Clock },
-        { id: 'url-gen', label: 'URL Combinator', icon: Link2 },
       ]
     }
   ];
@@ -106,6 +115,8 @@ const DevToolbox: React.FC = () => {
           {activeTool === 'regex' && <RegexValidator />}
           {activeTool === 'json' && <JsonFormatter />}
           {activeTool === 'json-extractor' && <JsonFieldExtractor onCopy={handleCopy} copyStatus={copyStatus} />}
+          {activeTool === 'postman-beautifier' && <PostmanBeautifier />}
+          {activeTool === 'postman-resequencer' && <PostmanResequencer />}
           {activeTool === 'uuid' && <UuidGenerator onCopy={handleCopy} copyStatus={copyStatus} />}
           {activeTool === 'timestamp' && <TimestampTool />}
           {activeTool === 'password' && <PasswordGenerator onCopy={handleCopy} copyStatus={copyStatus} />}
