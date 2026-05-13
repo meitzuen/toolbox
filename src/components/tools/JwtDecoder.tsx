@@ -3,7 +3,7 @@ import { Copy, Check, ShieldCheck, ShieldX, Shield, AlertCircle, RefreshCw } fro
 
 // ─── base64url helpers ────────────────────────────────────────────────────
 
-function b64urlToBytes(s: string): Uint8Array {
+function b64urlToBytes(s: string): Uint8Array<ArrayBuffer> {
   const b64 = s.replace(/-/g, '+').replace(/_/g, '/');
   const padded = b64.padEnd(b64.length + (4 - (b64.length % 4)) % 4, '=');
   return Uint8Array.from(atob(padded), c => c.charCodeAt(0));
