@@ -15,6 +15,10 @@ import {
   Type,
   GitCompare,
   Binary,
+<<<<<<< HEAD
+  FolderDown,
+=======
+>>>>>>> f761e3c864e051762717208d45b8da34b4be24fb
 } from 'lucide-react';
 
 import JwtDecoder from './tools/JwtDecoder';
@@ -24,6 +28,10 @@ import JsonFormatter from './tools/JsonFormatter';
 import JsonFieldExtractor from './tools/JsonFieldExtractor';
 import JsonDiff from './tools/JsonDiff';
 import PostmanBeautifier from './tools/PostmanBeautifier';
+<<<<<<< HEAD
+import PostmanParser from './tools/PostmanParser';
+=======
+>>>>>>> f761e3c864e051762717208d45b8da34b4be24fb
 import PostmanResequencer from './tools/PostmanResequencer';
 import UuidGenerator from './tools/UuidGenerator';
 import TimestampTool from './tools/TimestampTool';
@@ -38,7 +46,11 @@ import NumberBaseConverter from './tools/NumberBaseConverter';
 type ToolType =
   | 'jwt' | 'password'
   | 'base64' | 'hash'
+<<<<<<< HEAD
+  | 'postman-beautifier' | 'postman-resequencer' | 'postman-parser' | 'url-gen'
+=======
   | 'postman-beautifier' | 'postman-resequencer' | 'url-gen'
+>>>>>>> f761e3c864e051762717208d45b8da34b4be24fb
   | 'json' | 'json-extractor' | 'json-diff'
   | 'list-comp' | 'duplicates' | 'regex' | 'text-case'
   | 'uuid' | 'timestamp' | 'num-base';
@@ -75,6 +87,10 @@ const DevToolbox: React.FC = () => {
       items: [
         { id: 'postman-beautifier',  label: 'Postman Beautifier',   icon: FileJson },
         { id: 'postman-resequencer', label: 'Postman Resequencer',  icon: ListFilter },
+<<<<<<< HEAD
+        { id: 'postman-parser',      label: 'Postman Parser',       icon: FolderDown },
+=======
+>>>>>>> f761e3c864e051762717208d45b8da34b4be24fb
         { id: 'url-gen',             label: 'URL Combinator',       icon: Link2 },
       ],
     },
@@ -109,7 +125,11 @@ const DevToolbox: React.FC = () => {
       <aside className="w-56 bg-white border-r border-slate-200 flex flex-col shrink-0">
         <div className="p-5 border-b border-slate-100">
           <h1 className="text-lg font-bold text-indigo-600 flex items-center gap-2">
+<<<<<<< HEAD
+            <SearchCode size={22} /> Dev Tools
+=======
             <SearchCode size={22} /> DevTools
+>>>>>>> f761e3c864e051762717208d45b8da34b4be24fb
           </h1>
         </div>
         <nav className="flex-1 p-3 space-y-5 overflow-y-auto pt-5">
@@ -148,6 +168,10 @@ const DevToolbox: React.FC = () => {
           {activeTool === 'text-case'          && <TextCaseConverter onCopy={handleCopy} copyStatus={copyStatus} />}
           {activeTool === 'postman-beautifier' && <PostmanBeautifier />}
           {activeTool === 'postman-resequencer'&& <PostmanResequencer />}
+<<<<<<< HEAD
+          {activeTool === 'postman-parser'     && <PostmanParser />}
+=======
+>>>>>>> f761e3c864e051762717208d45b8da34b4be24fb
           {activeTool === 'url-gen'            && <UrlCombinationGenerator onCopy={handleCopy} copyStatus={copyStatus} />}
           {activeTool === 'json'               && <JsonFormatter />}
           {activeTool === 'json-extractor'     && <JsonFieldExtractor onCopy={handleCopy} copyStatus={copyStatus} />}
