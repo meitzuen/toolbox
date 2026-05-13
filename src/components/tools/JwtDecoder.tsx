@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React, { useState, useMemo, useCallback } from 'react';
 import { Copy, Check, ShieldCheck, ShieldX, Shield, AlertCircle, RefreshCw } from 'lucide-react';
 
@@ -98,8 +97,6 @@ const ALG_LABELS: Record<string, string> = {
   PS256: 'RSA-PSS SHA-256', PS384: 'RSA-PSS SHA-384', PS512: 'RSA-PSS SHA-512',
 };
 
-const TIMESTAMP_CLAIMS = ['exp', 'iat', 'nbf'] as const;
-
 type SigStatus = 'idle' | 'checking' | 'valid' | 'invalid' | 'unsupported' | 'error';
 
 // ─── sub-components ───────────────────────────────────────────────────────
@@ -132,11 +129,11 @@ function CopyButton({ text, id, copyStatus, onCopy }: {
 function SigStatusBadge({ status }: { status: SigStatus }) {
   if (status === 'idle') return null;
   const config = {
-    checking:    { icon: <RefreshCw size={13} className="animate-spin" />, label: 'Verifying…',          cls: 'bg-slate-100 text-slate-500 border-slate-200' },
-    valid:       { icon: <ShieldCheck size={13} />,                        label: 'Signature Verified',   cls: 'bg-green-50 text-green-700 border-green-200' },
-    invalid:     { icon: <ShieldX size={13} />,                            label: 'Invalid Signature',    cls: 'bg-red-50 text-red-600 border-red-200' },
+    checking:    { icon: <RefreshCw size={13} className="animate-spin" />, label: 'Verifying…',             cls: 'bg-slate-100 text-slate-500 border-slate-200' },
+    valid:       { icon: <ShieldCheck size={13} />,                        label: 'Signature Verified',      cls: 'bg-green-50 text-green-700 border-green-200' },
+    invalid:     { icon: <ShieldX size={13} />,                            label: 'Invalid Signature',       cls: 'bg-red-50 text-red-600 border-red-200' },
     unsupported: { icon: <Shield size={13} />,                             label: 'Algorithm not supported', cls: 'bg-amber-50 text-amber-700 border-amber-200' },
-    error:       { icon: <AlertCircle size={13} />,                        label: 'Verification error',   cls: 'bg-red-50 text-red-600 border-red-200' },
+    error:       { icon: <AlertCircle size={13} />,                        label: 'Verification error',      cls: 'bg-red-50 text-red-600 border-red-200' },
   }[status];
 
   return (
@@ -159,9 +156,9 @@ function ClaimRow({ label, raw, date, badge }: {
       </div>
       {badge && (
         <span className={`shrink-0 px-2 py-0.5 rounded-full text-[10px] font-semibold ${
-          badge.red    ? 'bg-red-100 text-red-600'    :
-          badge.green  ? 'bg-green-100 text-green-700' :
-          badge.amber  ? 'bg-amber-100 text-amber-700' :
+          badge.red    ? 'bg-red-100 text-red-600'     :
+          badge.green  ? 'bg-green-100 text-green-700'  :
+          badge.amber  ? 'bg-amber-100 text-amber-700'  :
           'bg-slate-100 text-slate-600'
         }`}>
           {badge.text}
@@ -174,11 +171,11 @@ function ClaimRow({ label, raw, date, badge }: {
 // ─── main component ───────────────────────────────────────────────────────
 
 const JwtDecoder: React.FC = () => {
-  const [token, setToken]         = useState('');
+  const [token, setToken]             = useState('');
   const [secretOrKey, setSecretOrKey] = useState('');
-  const [sigStatus, setSigStatus] = useState<SigStatus>('idle');
-  const [sigError, setSigError]   = useState<string | null>(null);
-  const [copyStatus, setCopyStatus] = useState<string | null>(null);
+  const [sigStatus, setSigStatus]     = useState<SigStatus>('idle');
+  const [sigError, setSigError]       = useState<string | null>(null);
+  const [copyStatus, setCopyStatus]   = useState<string | null>(null);
 
   const handleCopy = (text: string, id: string) => {
     navigator.clipboard.writeText(text);
@@ -209,8 +206,8 @@ const JwtDecoder: React.FC = () => {
     const exp = get('exp'), iat = get('iat'), nbf = get('nbf');
     return {
       exp, iat, nbf,
-      expExpired:  exp !== null && exp < now,
-      nbfNotYet:   nbf !== null && nbf > now,
+      expExpired: exp !== null && exp < now,
+      nbfNotYet:  nbf !== null && nbf > now,
     };
   }, [parsed]);
 
@@ -234,14 +231,13 @@ const JwtDecoder: React.FC = () => {
 
   const resetSig = () => { setSigStatus('idle'); setSigError(null); };
 
-  const parts  = parsed && !('error' in parsed) ? parsed.parts  : null;
+  const parts   = parsed && !('error' in parsed) ? parsed.parts   : null;
   const header  = parsed && !('error' in parsed) ? parsed.header  : null;
   const payload = parsed && !('error' in parsed) ? parsed.payload : null;
 
   const headerJson  = header  ? JSON.stringify(header,  null, 2) : '';
   const payloadJson = payload ? JSON.stringify(payload, null, 2) : '';
 
-  // Overall token validity banner
   const tokenValid = !!parsed && !('error' in parsed);
   const expired    = claims?.expExpired;
   const nbfNotYet  = claims?.nbfNotYet;
@@ -264,11 +260,9 @@ const JwtDecoder: React.FC = () => {
             ? 'bg-amber-50 border-amber-200 text-amber-700'
             : 'bg-green-50 border-green-200 text-green-700'
         }`}>
-          {expired
-            ? <ShieldX size={16} />
-            : nbfNotYet
-            ? <Shield size={16} />
-            : <ShieldCheck size={16} />}
+          {expired    ? <ShieldX size={16} />    :
+           nbfNotYet  ? <Shield size={16} />     :
+                        <ShieldCheck size={16} />}
           {expired
             ? `Token expired — ${new Date(claims!.exp! * 1000).toLocaleString()}`
             : nbfNotYet
@@ -319,94 +313,10 @@ const JwtDecoder: React.FC = () => {
               </span>
               <span className="flex items-center gap-1.5">
                 <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 shrink-0" /> Signature
-=======
-import React, { useState, useMemo } from 'react';
-import { Copy, Check } from 'lucide-react';
-
-const JwtDecoder: React.FC = () => {
-  const [input, setInput] = useState('');
-  const [copyStatus, setCopyStatus] = useState<string | null>(null);
-
-  const handleCopy = (text: string, id: string) => {
-    navigator.clipboard.writeText(text);
-    setCopyStatus(id);
-    setTimeout(() => setCopyStatus(null), 2000);
-  };
-
-  const decoded = useMemo(() => {
-    const raw = input.trim();
-    if (!raw) return null;
-    try {
-      const parts = raw.split('.');
-      if (parts.length < 2) return { error: 'Not a valid JWT — expected 3 dot-separated parts' };
-      const b64 = (s: string) => {
-        const padded = s.replace(/-/g, '+').replace(/_/g, '/');
-        return JSON.parse(window.atob(padded));
-      };
-      const header = b64(parts[0]);
-      const payload = b64(parts[1]);
-      const now = Math.floor(Date.now() / 1000);
-      const exp = typeof payload.exp === 'number' ? payload.exp : undefined;
-      const iat = typeof payload.iat === 'number' ? payload.iat : undefined;
-      const nbf = typeof payload.nbf === 'number' ? payload.nbf : undefined;
-      const expStatus: 'valid' | 'expired' | undefined = exp !== undefined
-        ? (exp < now ? 'expired' : 'valid')
-        : undefined;
-      return { header, payload, exp, iat, nbf, expStatus };
-    } catch {
-      return { error: 'Invalid JWT — could not decode payload' };
-    }
-  }, [input]);
-
-  return (
-    <div className="space-y-6 animate-in fade-in duration-500">
-      <h2 className="text-2xl font-bold">JWT Decoder</h2>
-
-      <textarea
-        className="w-full h-28 p-4 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none font-mono text-sm resize-none"
-        placeholder="Paste your JWT here..."
-        value={input}
-        onChange={e => setInput(e.target.value)}
-      />
-
-      {decoded?.error && (
-        <div className="p-4 bg-red-50 text-red-600 rounded-xl text-sm border border-red-100">
-          {decoded.error}
-        </div>
-      )}
-
-      {decoded && !decoded.error && (
-        <div className="space-y-4">
-          {decoded.expStatus && (
-            <div className={`px-4 py-3 rounded-xl flex items-center gap-3 border text-sm font-medium ${
-              decoded.expStatus === 'valid'
-                ? 'bg-green-50 border-green-200 text-green-700'
-                : 'bg-red-50 border-red-200 text-red-700'
-            }`}>
-              <span className={`w-2 h-2 rounded-full shrink-0 ${
-                decoded.expStatus === 'valid' ? 'bg-green-500' : 'bg-red-500'
-              }`} />
-              <span>
-                {decoded.expStatus === 'valid' ? 'Token valid' : 'Token expired'}
-                {' — '}
-                {decoded.expStatus === 'valid' ? 'expires' : 'expired'}{' '}
-                {new Date(decoded.exp! * 1000).toLocaleString()}
-                {decoded.iat && (
-                  <span className="ml-2 opacity-70">
-                    · issued {new Date(decoded.iat * 1000).toLocaleString()}
-                  </span>
-                )}
-                {decoded.nbf && decoded.nbf > Math.floor(Date.now() / 1000) && (
-                  <span className="ml-2 opacity-70">
-                    · not valid before {new Date(decoded.nbf * 1000).toLocaleString()}
-                  </span>
-                )}
->>>>>>> f761e3c864e051762717208d45b8da34b4be24fb
               </span>
             </div>
           )}
 
-<<<<<<< HEAD
           {parsed?.error && (
             <div className="flex items-center gap-2 p-3 bg-red-50 text-red-600 rounded-xl text-sm border border-red-100">
               <AlertCircle size={15} className="shrink-0" />
@@ -534,36 +444,6 @@ const JwtDecoder: React.FC = () => {
         </div>
         <p className="mt-2 text-slate-400">All decoding happens locally in your browser — no data is sent to any server.</p>
       </div>
-=======
-          {[
-            { title: 'Header', data: decoded.header, id: 'jwt-header' },
-            { title: 'Payload', data: decoded.payload, id: 'jwt-payload' },
-          ].map(({ title, data, id }) => {
-            const text = JSON.stringify(data, null, 2);
-            return (
-              <div key={id} className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">{title}</label>
-                  <button
-                    onClick={() => handleCopy(text, id)}
-                    className={`p-1.5 rounded-lg flex items-center gap-1 text-xs transition-all ${
-                      copyStatus === id
-                        ? 'text-green-500 bg-green-50'
-                        : 'text-slate-400 hover:text-indigo-600 hover:bg-indigo-50'
-                    }`}
-                  >
-                    {copyStatus === id ? <><Check size={12} /> Copied</> : <><Copy size={12} /> Copy</>}
-                  </button>
-                </div>
-                <pre className="p-4 bg-slate-900 text-emerald-400 rounded-xl overflow-x-auto text-xs leading-relaxed min-h-[80px]">
-                  {text}
-                </pre>
-              </div>
-            );
-          })}
-        </div>
-      )}
->>>>>>> f761e3c864e051762717208d45b8da34b4be24fb
     </div>
   );
 };
