@@ -59,6 +59,21 @@ const PostmanResequencer: React.FC = () => {
     reader.readAsText(file);
   };
 
+  const resequenceTestCase = (testCase: PostmanItem, prefix: string, index: number): number => {
+    const oldName = testCase.name;
+    if (oldName.startsWith(IGNORE_TESTCASE_1) || oldName.startsWith(IGNORE_TESTCASE_2)) {
+      return index;
+    }
+    if (oldName.includes(VAILD_TESTCASE_CONDITION)) {
+      const newIndex = `${prefix}_${index.toString().padStart(2, '0')}`;
+      const parts = oldName.split(VAILD_TESTCASE_CONDITION);
+      const content = parts.slice(1).join(VAILD_TESTCASE_CONDITION);
+      testCase.name = `${newIndex}:${content}`;
+      return index + 1;
+    }
+    return index;
+  };
+
   const resequenceItems = (items: PostmanItem[]) => {
     for (const spec of items) {
       if (IGNORE_SPEC.includes(spec.name)) {
@@ -70,21 +85,17 @@ const PostmanResequencer: React.FC = () => {
           if (VAILD_TEST_TYPE.includes(testType.name) && testType.item && Array.isArray(testType.item)) {
             let index = 1;
             const prefix = TEST_TYPE_PREFIX[testType.name];
-            
-            for (const testCase of testType.item) {
-              const oldName = testCase.name;
-              
-              if (oldName.startsWith(IGNORE_TESTCASE_1) || oldName.startsWith(IGNORE_TESTCASE_2)) {
-                continue;
-              }
-              
-              if (oldName.includes(VAILD_TESTCASE_CONDITION)) {
-                const newIndex = `${prefix}_${index.toString().padStart(2, '0')}`;
-                const parts = oldName.split(VAILD_TESTCASE_CONDITION);
-                // Remove the first part (existing index) and join the rest
-                const content = parts.slice(1).join(VAILD_TESTCASE_CONDITION);
-                testCase.name = `${newIndex}:${content}`;
-                index++;
+
+            for (const child of testType.item) {
+              if (child.item && Array.isArray(child.item)) {
+                // Sub-folder level (e.g. status code folders "400", "404" inside Force Error Test)
+                // Counter stays continuous across all sub-folders
+                for (const testCase of child.item) {
+                  index = resequenceTestCase(testCase, prefix, index);
+                }
+              } else {
+                // Direct test case (Functional Test / Boundary Test style)
+                index = resequenceTestCase(child, prefix, index);
               }
             }
           }
@@ -215,6 +226,7 @@ const PostmanResequencer: React.FC = () => {
         <ul className="list-disc ml-4 space-y-1">
           <li>Identifies test folders: <code className="bg-slate-200 px-1 rounded">Functional Test</code>, <code className="bg-slate-200 px-1 rounded">Force Error Test</code>, and <code className="bg-slate-200 px-1 rounded">Boundary Test</code>.</li>
           <li>Applies prefixes: <code className="bg-slate-200 px-1 rounded">FN_XX:</code>, <code className="bg-slate-200 px-1 rounded">FET_XX:</code>, or <code className="bg-slate-200 px-1 rounded">BT_XX:</code>.</li>
+          <li>Supports <code className="bg-slate-200 px-1 rounded">Force Error Test</code> sub-folders (e.g. <code className="bg-slate-200 px-1 rounded">400</code>, <code className="bg-slate-200 px-1 rounded">404</code>) — numbering stays continuous across all status sub-folders.</li>
           <li>Resets numbering for each test type folder.</li>
           <li>Ignores folders named <code className="bg-slate-200 px-1 rounded">Init</code> and requests starting with <code className="bg-slate-200 px-1 rounded">PRE</code> or <code className="bg-slate-200 px-1 rounded">CHECK</code>.</li>
         </ul>

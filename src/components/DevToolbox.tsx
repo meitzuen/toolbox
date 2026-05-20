@@ -16,6 +16,7 @@ import {
   GitCompare,
   Binary,
   FolderDown,
+  Edit3,
 } from 'lucide-react';
 
 import JwtDecoder from './tools/JwtDecoder';
@@ -25,6 +26,7 @@ import JsonFormatter from './tools/JsonFormatter';
 import JsonFieldExtractor from './tools/JsonFieldExtractor';
 import JsonDiff from './tools/JsonDiff';
 import PostmanBeautifier from './tools/PostmanBeautifier';
+import PostmanEditor from './tools/PostmanEditor';
 import PostmanParser from './tools/PostmanParser';
 import PostmanResequencer from './tools/PostmanResequencer';
 import UuidGenerator from './tools/UuidGenerator';
@@ -40,7 +42,7 @@ import NumberBaseConverter from './tools/NumberBaseConverter';
 type ToolType =
   | 'jwt' | 'password'
   | 'base64' | 'hash'
-  | 'postman-beautifier' | 'postman-resequencer' | 'postman-parser' | 'url-gen'
+  | 'postman-beautifier' | 'postman-editor' | 'postman-resequencer' | 'postman-parser' | 'url-gen'
   | 'json' | 'json-extractor' | 'json-diff'
   | 'list-comp' | 'duplicates' | 'regex' | 'text-case'
   | 'uuid' | 'timestamp' | 'num-base';
@@ -76,6 +78,7 @@ const DevToolbox: React.FC = () => {
       title: 'Postman Tools',
       items: [
         { id: 'postman-beautifier',  label: 'Postman Beautifier',   icon: FileJson },
+        { id: 'postman-editor',      label: 'Postman Editor',       icon: Edit3 },
         { id: 'postman-resequencer', label: 'Postman Resequencer',  icon: ListFilter },
         { id: 'postman-parser',      label: 'Postman Parser',       icon: FolderDown },
         { id: 'url-gen',             label: 'URL Combinator',       icon: Link2 },
@@ -149,7 +152,8 @@ const DevToolbox: React.FC = () => {
           {activeTool === 'base64'             && <Base64Tool onCopy={handleCopy} copyStatus={copyStatus} />}
           {activeTool === 'num-base'           && <NumberBaseConverter onCopy={handleCopy} copyStatus={copyStatus} />}
           {activeTool === 'text-case'          && <TextCaseConverter onCopy={handleCopy} copyStatus={copyStatus} />}
-          {activeTool === 'postman-beautifier' && <PostmanBeautifier />}
+          {activeTool === 'postman-beautifier'  && <PostmanBeautifier />}
+          {activeTool === 'postman-editor'     && <PostmanEditor />}
           {activeTool === 'postman-resequencer'&& <PostmanResequencer />}
           {activeTool === 'postman-parser'     && <PostmanParser />}
           {activeTool === 'url-gen'            && <UrlCombinationGenerator onCopy={handleCopy} copyStatus={copyStatus} />}
