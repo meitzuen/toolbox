@@ -17,6 +17,7 @@ import {
   Binary,
   FolderDown,
   Edit3,
+  Users,
 } from 'lucide-react';
 
 import JwtDecoder from './tools/JwtDecoder';
@@ -38,6 +39,7 @@ import Base64Tool from './tools/Base64Tool';
 import HashGenerator from './tools/HashGenerator';
 import TextCaseConverter from './tools/TextCaseConverter';
 import NumberBaseConverter from './tools/NumberBaseConverter';
+import TestPlayerGenerator from './tools/TestPlayerGenerator';
 
 type ToolType =
   | 'jwt' | 'password'
@@ -45,7 +47,7 @@ type ToolType =
   | 'postman-beautifier' | 'postman-editor' | 'postman-resequencer' | 'postman-parser' | 'url-gen'
   | 'json' | 'json-extractor' | 'json-diff'
   | 'list-comp' | 'duplicates' | 'regex' | 'text-case'
-  | 'uuid' | 'timestamp' | 'num-base';
+  | 'uuid' | 'timestamp' | 'num-base' | 'test-player';
 
 const DevToolbox: React.FC = () => {
   const [activeTool, setActiveTool] = useState<ToolType>('jwt');
@@ -103,8 +105,9 @@ const DevToolbox: React.FC = () => {
     {
       title: 'Generators',
       items: [
-        { id: 'uuid',      label: 'UUID',      icon: Fingerprint },
-        { id: 'timestamp', label: 'Timestamp', icon: Clock },
+        { id: 'uuid',        label: 'UUID',         icon: Fingerprint },
+        { id: 'timestamp',   label: 'Timestamp',    icon: Clock },
+        { id: 'test-player', label: 'Test Players', icon: Users },
       ],
     },
   ];
@@ -165,6 +168,7 @@ const DevToolbox: React.FC = () => {
           {activeTool === 'regex'              && <RegexValidator />}
           {activeTool === 'uuid'               && <UuidGenerator onCopy={handleCopy} copyStatus={copyStatus} />}
           {activeTool === 'timestamp'          && <TimestampTool />}
+          {activeTool === 'test-player'        && <TestPlayerGenerator onCopy={handleCopy} copyStatus={copyStatus} />}
         </div>
       </main>
 
