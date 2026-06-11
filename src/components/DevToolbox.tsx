@@ -136,44 +136,54 @@ const DevToolbox: React.FC = () => {
   ];
 
   return (
-    <div className="flex h-screen bg-slate-50 text-slate-800 font-sans overflow-hidden">
+    <div className="flex h-screen bg-slate-100 text-slate-800 font-sans overflow-hidden">
       {/* Sidebar */}
-      <aside className="w-72 bg-white border-r border-slate-200 flex flex-col shrink-0">
-        <div className="p-5 border-b border-slate-100">
-          <h1 className="text-lg font-bold text-indigo-600 flex items-center gap-2">
-            <SearchCode size={22} /> DevTools
+      <aside className="w-72 bg-white shadow-md flex flex-col shrink-0">
+        <div className="px-5 py-6 bg-gradient-to-br from-indigo-600 to-violet-600">
+          <h1 className="text-xl font-bold text-white flex items-center gap-2.5 tracking-tight">
+            <SearchCode size={24} />
+            Dev Tools
           </h1>
         </div>
-        <nav className="flex-1 p-3 space-y-5 overflow-y-auto pt-5">
+        <nav className="flex-1 px-3 py-4 space-y-4 overflow-y-auto">
           {toolGroups.map((group) => (
-            <div key={group.title} className="space-y-0.5">
-              <h3 className="px-3 text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">
+            <div key={group.title}>
+              <h3 className="px-3 text-[11px] font-semibold text-slate-400 uppercase tracking-widest mb-1">
                 {group.title}
               </h3>
-              {group.items.map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => setActiveTool(item.id as ToolType)}
-                  className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg transition-all text-left ${
-                    activeTool === item.id
-                      ? "bg-indigo-50 text-indigo-600 font-medium"
-                      : "text-slate-500 hover:bg-slate-100 hover:text-slate-700"
-                  }`}
-                >
-                  <item.icon size={16} className="shrink-0" />
-                  <span className="text-sm truncate">{item.label}</span>
-                </button>
-              ))}
+              <div className="space-y-0.5">
+                {group.items.map((item) => (
+                  <button
+                    key={item.id}
+                    onClick={() => setActiveTool(item.id as ToolType)}
+                    className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-150 text-left ${
+                      activeTool === item.id
+                        ? "bg-indigo-50 text-indigo-700 font-semibold shadow-sm ring-1 ring-indigo-100"
+                        : "text-slate-500 hover:bg-slate-50 hover:text-slate-800"
+                    }`}
+                  >
+                    <item.icon
+                      size={17}
+                      className={`shrink-0 ${activeTool === item.id ? "text-indigo-500" : "text-slate-400"}`}
+                    />
+                    <span className="text-sm truncate">{item.label}</span>
+                  </button>
+                ))}
+              </div>
             </div>
           ))}
         </nav>
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 overflow-y-auto p-8 bg-slate-50">
+      <main className="flex-1 overflow-y-auto p-8 bg-slate-100">
         <div className="max-w-4xl mx-auto">
           <Suspense
-            fallback={<div className="text-slate-400 text-sm">Loading…</div>}
+            fallback={
+              <div className="flex items-center justify-center h-32 text-slate-400 text-sm">
+                Loading…
+              </div>
+            }
           >
             {activeTool === "jwt" && <JwtDecoder />}
             {activeTool === "password" && (
@@ -228,8 +238,8 @@ const DevToolbox: React.FC = () => {
 
       {/* Global Toast */}
       {copyStatus && (
-        <div className="fixed bottom-8 right-8 bg-slate-800 text-white px-4 py-2 rounded-lg shadow-lg flex items-center gap-2 animate-in fade-in slide-in-from-bottom-4">
-          <Check size={16} className="text-green-400" /> Copied!
+        <div className="fixed bottom-6 right-6 bg-slate-900 text-white px-4 py-2.5 rounded-xl shadow-xl flex items-center gap-2 text-sm font-medium">
+          <Check size={15} className="text-emerald-400" /> Copied to clipboard
         </div>
       )}
     </div>
