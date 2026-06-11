@@ -1,2 +1,6 @@
-/* src/index.css */
 @import "tailwindcss";
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap");
+
+@theme {
+  --font-sans: "Playfair Display", ui-serif, Georgia, serif;
+}

@@ -26,10 +26,11 @@ const RegexValidator = lazy(() => import("./tools/RegexValidator"));
 const JsonFormatter = lazy(() => import("./tools/JsonFormatter"));
 const JsonFieldExtractor = lazy(() => import("./tools/JsonFieldExtractor"));
 const JsonDiff = lazy(() => import("./tools/JsonDiff"));
-const PostmanBeautifier = lazy(() => import("./tools/PostmanBeautifier"));
+const PostmanBeautifyResequence = lazy(
+  () => import("./tools/PostmanBeautifyResequence"),
+);
 const PostmanEditor = lazy(() => import("./tools/PostmanEditor"));
 const PostmanParser = lazy(() => import("./tools/PostmanParser"));
-const PostmanResequencer = lazy(() => import("./tools/PostmanResequencer"));
 const UuidGenerator = lazy(() => import("./tools/UuidGenerator"));
 const TimestampTool = lazy(() => import("./tools/TimestampTool"));
 const PasswordGenerator = lazy(() => import("./tools/PasswordGenerator"));
@@ -50,7 +51,6 @@ type ToolType =
   | "hash"
   | "postman-beautifier"
   | "postman-editor"
-  | "postman-resequencer"
   | "postman-parser"
   | "url-gen"
   | "json"
@@ -88,7 +88,6 @@ const DevToolbox: React.FC = () => {
         { id: "json-diff", label: "JSON Comparison", icon: GitCompare },
       ],
     },
-    ,
     {
       title: "Generators",
       items: [
@@ -108,11 +107,6 @@ const DevToolbox: React.FC = () => {
           icon: FileJson,
         },
         { id: "postman-editor", label: "Postman Editor", icon: Edit3 },
-        {
-          id: "postman-resequencer",
-          label: "Postman Resequencer",
-          icon: ListFilter,
-        },
         { id: "postman-parser", label: "Postman Parser", icon: FolderDown },
       ],
     },
@@ -140,7 +134,7 @@ const DevToolbox: React.FC = () => {
       {/* Sidebar */}
       <aside className="w-72 bg-white shadow-md flex flex-col shrink-0">
         <div className="px-5 py-6 bg-gradient-to-br from-indigo-600 to-violet-600">
-          <h1 className="text-xl font-bold text-white flex items-center gap-2.5 tracking-tight">
+          <h1 className="text-2xl font-bold text-white flex items-center gap-2.5 tracking-tight">
             <SearchCode size={24} />
             Dev Tools
           </h1>
@@ -148,7 +142,7 @@ const DevToolbox: React.FC = () => {
         <nav className="flex-1 px-3 py-4 space-y-4 overflow-y-auto">
           {toolGroups.map((group) => (
             <div key={group.title}>
-              <h3 className="px-3 text-[11px] font-semibold text-slate-400 uppercase tracking-widest mb-1">
+              <h3 className="px-3 text-sm font-semibold text-slate-400 uppercase tracking-widest mb-1">
                 {group.title}
               </h3>
               <div className="space-y-0.5">
@@ -204,9 +198,10 @@ const DevToolbox: React.FC = () => {
             {activeTool === "text-case" && (
               <TextCaseConverter onCopy={handleCopy} copyStatus={copyStatus} />
             )}
-            {activeTool === "postman-beautifier" && <PostmanBeautifier />}
+            {activeTool === "postman-beautifier" && (
+              <PostmanBeautifyResequence />
+            )}
             {activeTool === "postman-editor" && <PostmanEditor />}
-            {activeTool === "postman-resequencer" && <PostmanResequencer />}
             {activeTool === "postman-parser" && <PostmanParser />}
             {activeTool === "url-gen" && (
               <UrlCombinationGenerator
