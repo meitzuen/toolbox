@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, Suspense, lazy } from 'react';
 import {
   ShieldCheck,
   Columns,
@@ -20,26 +20,26 @@ import {
   Users,
 } from 'lucide-react';
 
-import JwtDecoder from './tools/JwtDecoder';
-import ListComparator from './tools/ListComparator';
-import RegexValidator from './tools/RegexValidator';
-import JsonFormatter from './tools/JsonFormatter';
-import JsonFieldExtractor from './tools/JsonFieldExtractor';
-import JsonDiff from './tools/JsonDiff';
-import PostmanBeautifier from './tools/PostmanBeautifier';
-import PostmanEditor from './tools/PostmanEditor';
-import PostmanParser from './tools/PostmanParser';
-import PostmanResequencer from './tools/PostmanResequencer';
-import UuidGenerator from './tools/UuidGenerator';
-import TimestampTool from './tools/TimestampTool';
-import PasswordGenerator from './tools/PasswordGenerator';
-import FindDuplicates from './tools/FindDuplicates';
-import UrlCombinationGenerator from './tools/UrlCombinationGenerator';
-import Base64Tool from './tools/Base64Tool';
-import HashGenerator from './tools/HashGenerator';
-import TextCaseConverter from './tools/TextCaseConverter';
-import NumberBaseConverter from './tools/NumberBaseConverter';
-import TestPlayerGenerator from './tools/TestPlayerGenerator';
+const JwtDecoder = lazy(() => import('./tools/JwtDecoder'));
+const ListComparator = lazy(() => import('./tools/ListComparator'));
+const RegexValidator = lazy(() => import('./tools/RegexValidator'));
+const JsonFormatter = lazy(() => import('./tools/JsonFormatter'));
+const JsonFieldExtractor = lazy(() => import('./tools/JsonFieldExtractor'));
+const JsonDiff = lazy(() => import('./tools/JsonDiff'));
+const PostmanBeautifier = lazy(() => import('./tools/PostmanBeautifier'));
+const PostmanEditor = lazy(() => import('./tools/PostmanEditor'));
+const PostmanParser = lazy(() => import('./tools/PostmanParser'));
+const PostmanResequencer = lazy(() => import('./tools/PostmanResequencer'));
+const UuidGenerator = lazy(() => import('./tools/UuidGenerator'));
+const TimestampTool = lazy(() => import('./tools/TimestampTool'));
+const PasswordGenerator = lazy(() => import('./tools/PasswordGenerator'));
+const FindDuplicates = lazy(() => import('./tools/FindDuplicates'));
+const UrlCombinationGenerator = lazy(() => import('./tools/UrlCombinationGenerator'));
+const Base64Tool = lazy(() => import('./tools/Base64Tool'));
+const HashGenerator = lazy(() => import('./tools/HashGenerator'));
+const TextCaseConverter = lazy(() => import('./tools/TextCaseConverter'));
+const NumberBaseConverter = lazy(() => import('./tools/NumberBaseConverter'));
+const TestPlayerGenerator = lazy(() => import('./tools/TestPlayerGenerator'));
 
 type ToolType =
   | 'jwt' | 'password'
@@ -149,6 +149,7 @@ const DevToolbox: React.FC = () => {
       {/* Main Content */}
       <main className="flex-1 overflow-y-auto p-8 bg-slate-50">
         <div className="max-w-4xl mx-auto">
+        <Suspense fallback={<div className="text-slate-400 text-sm">Loading…</div>}>
           {activeTool === 'jwt'                && <JwtDecoder />}
           {activeTool === 'password'           && <PasswordGenerator onCopy={handleCopy} copyStatus={copyStatus} />}
           {activeTool === 'hash'               && <HashGenerator onCopy={handleCopy} copyStatus={copyStatus} />}
@@ -169,6 +170,7 @@ const DevToolbox: React.FC = () => {
           {activeTool === 'uuid'               && <UuidGenerator onCopy={handleCopy} copyStatus={copyStatus} />}
           {activeTool === 'timestamp'          && <TimestampTool />}
           {activeTool === 'test-player'        && <TestPlayerGenerator onCopy={handleCopy} copyStatus={copyStatus} />}
+        </Suspense>
         </div>
       </main>
 
