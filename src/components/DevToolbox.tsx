@@ -138,7 +138,7 @@ const DevToolbox: React.FC = () => {
   return (
     <div className="flex h-screen bg-slate-50 text-slate-800 font-sans overflow-hidden">
       {/* Sidebar */}
-      <aside className="w-56 bg-white border-r border-slate-200 flex flex-col shrink-0">
+      <aside className="w-72 bg-white border-r border-slate-200 flex flex-col shrink-0">
         <div className="p-5 border-b border-slate-100">
           <h1 className="text-lg font-bold text-indigo-600 flex items-center gap-2">
             <SearchCode size={22} /> DevTools
@@ -147,7 +147,7 @@ const DevToolbox: React.FC = () => {
         <nav className="flex-1 p-3 space-y-5 overflow-y-auto pt-5">
           {toolGroups.map((group) => (
             <div key={group.title} className="space-y-0.5">
-              <h3 className="px-3 text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">
+              <h3 className="px-3 text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">
                 {group.title}
               </h3>
               {group.items.map((item) => (
@@ -161,7 +161,7 @@ const DevToolbox: React.FC = () => {
                   }`}
                 >
                   <item.icon size={16} className="shrink-0" />
-                  <span className="text-xs truncate">{item.label}</span>
+                  <span className="text-sm truncate">{item.label}</span>
                 </button>
               ))}
             </div>
