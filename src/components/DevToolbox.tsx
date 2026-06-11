@@ -1,4 +1,4 @@
-import React, { useState, Suspense, lazy } from 'react';
+import React, { useState, Suspense, lazy } from "react";
 import {
   ShieldCheck,
   Columns,
@@ -18,39 +18,55 @@ import {
   FolderDown,
   Edit3,
   Users,
-} from 'lucide-react';
+} from "lucide-react";
 
-const JwtDecoder = lazy(() => import('./tools/JwtDecoder'));
-const ListComparator = lazy(() => import('./tools/ListComparator'));
-const RegexValidator = lazy(() => import('./tools/RegexValidator'));
-const JsonFormatter = lazy(() => import('./tools/JsonFormatter'));
-const JsonFieldExtractor = lazy(() => import('./tools/JsonFieldExtractor'));
-const JsonDiff = lazy(() => import('./tools/JsonDiff'));
-const PostmanBeautifier = lazy(() => import('./tools/PostmanBeautifier'));
-const PostmanEditor = lazy(() => import('./tools/PostmanEditor'));
-const PostmanParser = lazy(() => import('./tools/PostmanParser'));
-const PostmanResequencer = lazy(() => import('./tools/PostmanResequencer'));
-const UuidGenerator = lazy(() => import('./tools/UuidGenerator'));
-const TimestampTool = lazy(() => import('./tools/TimestampTool'));
-const PasswordGenerator = lazy(() => import('./tools/PasswordGenerator'));
-const FindDuplicates = lazy(() => import('./tools/FindDuplicates'));
-const UrlCombinationGenerator = lazy(() => import('./tools/UrlCombinationGenerator'));
-const Base64Tool = lazy(() => import('./tools/Base64Tool'));
-const HashGenerator = lazy(() => import('./tools/HashGenerator'));
-const TextCaseConverter = lazy(() => import('./tools/TextCaseConverter'));
-const NumberBaseConverter = lazy(() => import('./tools/NumberBaseConverter'));
-const TestPlayerGenerator = lazy(() => import('./tools/TestPlayerGenerator'));
+const JwtDecoder = lazy(() => import("./tools/JwtDecoder"));
+const ListComparator = lazy(() => import("./tools/ListComparator"));
+const RegexValidator = lazy(() => import("./tools/RegexValidator"));
+const JsonFormatter = lazy(() => import("./tools/JsonFormatter"));
+const JsonFieldExtractor = lazy(() => import("./tools/JsonFieldExtractor"));
+const JsonDiff = lazy(() => import("./tools/JsonDiff"));
+const PostmanBeautifier = lazy(() => import("./tools/PostmanBeautifier"));
+const PostmanEditor = lazy(() => import("./tools/PostmanEditor"));
+const PostmanParser = lazy(() => import("./tools/PostmanParser"));
+const PostmanResequencer = lazy(() => import("./tools/PostmanResequencer"));
+const UuidGenerator = lazy(() => import("./tools/UuidGenerator"));
+const TimestampTool = lazy(() => import("./tools/TimestampTool"));
+const PasswordGenerator = lazy(() => import("./tools/PasswordGenerator"));
+const FindDuplicates = lazy(() => import("./tools/FindDuplicates"));
+const UrlCombinationGenerator = lazy(
+  () => import("./tools/UrlCombinationGenerator"),
+);
+const Base64Tool = lazy(() => import("./tools/Base64Tool"));
+const HashGenerator = lazy(() => import("./tools/HashGenerator"));
+const TextCaseConverter = lazy(() => import("./tools/TextCaseConverter"));
+const NumberBaseConverter = lazy(() => import("./tools/NumberBaseConverter"));
+const TestPlayerGenerator = lazy(() => import("./tools/TestPlayerGenerator"));
 
 type ToolType =
-  | 'jwt' | 'password'
-  | 'base64' | 'hash'
-  | 'postman-beautifier' | 'postman-editor' | 'postman-resequencer' | 'postman-parser' | 'url-gen'
-  | 'json' | 'json-extractor' | 'json-diff'
-  | 'list-comp' | 'duplicates' | 'regex' | 'text-case'
-  | 'uuid' | 'timestamp' | 'num-base' | 'test-player';
+  | "jwt"
+  | "password"
+  | "base64"
+  | "hash"
+  | "postman-beautifier"
+  | "postman-editor"
+  | "postman-resequencer"
+  | "postman-parser"
+  | "url-gen"
+  | "json"
+  | "json-extractor"
+  | "json-diff"
+  | "list-comp"
+  | "duplicates"
+  | "regex"
+  | "text-case"
+  | "uuid"
+  | "timestamp"
+  | "num-base"
+  | "test-player";
 
 const DevToolbox: React.FC = () => {
-  const [activeTool, setActiveTool] = useState<ToolType>('jwt');
+  const [activeTool, setActiveTool] = useState<ToolType>("jwt");
   const [copyStatus, setCopyStatus] = useState<string | null>(null);
 
   const handleCopy = (text: string, id: string) => {
@@ -61,53 +77,60 @@ const DevToolbox: React.FC = () => {
 
   const toolGroups = [
     {
-      title: 'Auth & Security',
+      title: "Jwt",
+      items: [{ id: "jwt", label: "JWT Decoder", icon: ShieldCheck }],
+    },
+    {
+      title: "JSON",
       items: [
-        { id: 'jwt',      label: 'JWT Decoder',    icon: ShieldCheck },
-        { id: 'password', label: 'Password Gen',   icon: Lock },
-        { id: 'hash',     label: 'Hash Generator', icon: Hash },
+        { id: "json", label: "JSON Formatter", icon: FileJson },
+        { id: "json-extractor", label: "JSON Extractor", icon: ListFilter },
+        { id: "json-diff", label: "JSON Comparison", icon: GitCompare },
+      ],
+    },
+    ,
+    {
+      title: "Generators",
+      items: [
+        { id: "uuid", label: "UUID", icon: Fingerprint },
+        { id: "timestamp", label: "Timestamp", icon: Clock },
+        { id: "test-player", label: "Test Players", icon: Users },
+        { id: "password", label: "Password", icon: Lock },
+        { id: "hash", label: "Hash Generator", icon: Hash },
       ],
     },
     {
-      title: 'Encoding',
+      title: "Postman Tools",
       items: [
-        { id: 'base64',   label: 'Base64',          icon: ArrowLeftRight },
-        { id: 'num-base', label: 'Number Bases',    icon: Binary },
-        { id: 'text-case',label: 'Case Converter',  icon: Type },
+        {
+          id: "postman-beautifier",
+          label: "Postman Beautifier",
+          icon: FileJson,
+        },
+        { id: "postman-editor", label: "Postman Editor", icon: Edit3 },
+        {
+          id: "postman-resequencer",
+          label: "Postman Resequencer",
+          icon: ListFilter,
+        },
+        { id: "postman-parser", label: "Postman Parser", icon: FolderDown },
       ],
     },
     {
-      title: 'Postman Tools',
+      title: "Lists & Others",
       items: [
-        { id: 'postman-beautifier',  label: 'Postman Beautifier',   icon: FileJson },
-        { id: 'postman-editor',      label: 'Postman Editor',       icon: Edit3 },
-        { id: 'postman-resequencer', label: 'Postman Resequencer',  icon: ListFilter },
-        { id: 'postman-parser',      label: 'Postman Parser',       icon: FolderDown },
-        { id: 'url-gen',             label: 'URL Combinator',       icon: Link2 },
+        { id: "list-comp", label: "List Comparator", icon: Columns },
+        { id: "duplicates", label: "Find Duplicates", icon: ListFilter },
+        { id: "url-gen", label: "URL Combinator", icon: Link2 },
+        { id: "regex", label: "Regex Validator", icon: SearchCode },
       ],
     },
     {
-      title: 'JSON',
+      title: "Encoding",
       items: [
-        { id: 'json',           label: 'JSON Formatter', icon: FileJson },
-        { id: 'json-extractor', label: 'JSON Extractor', icon: ListFilter },
-        { id: 'json-diff',      label: 'JSON Diff',      icon: GitCompare },
-      ],
-    },
-    {
-      title: 'Lists & Text',
-      items: [
-        { id: 'list-comp',  label: 'List Comparator', icon: Columns },
-        { id: 'duplicates', label: 'Find Duplicates',  icon: ListFilter },
-        { id: 'regex',      label: 'Regex Validator',  icon: SearchCode },
-      ],
-    },
-    {
-      title: 'Generators',
-      items: [
-        { id: 'uuid',        label: 'UUID',         icon: Fingerprint },
-        { id: 'timestamp',   label: 'Timestamp',    icon: Clock },
-        { id: 'test-player', label: 'Test Players', icon: Users },
+        { id: "base64", label: "Base64", icon: ArrowLeftRight },
+        { id: "num-base", label: "Number Bases", icon: Binary },
+        { id: "text-case", label: "Case Converter", icon: Type },
       ],
     },
   ];
@@ -133,8 +156,8 @@ const DevToolbox: React.FC = () => {
                   onClick={() => setActiveTool(item.id as ToolType)}
                   className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg transition-all text-left ${
                     activeTool === item.id
-                      ? 'bg-indigo-50 text-indigo-600 font-medium'
-                      : 'text-slate-500 hover:bg-slate-100 hover:text-slate-700'
+                      ? "bg-indigo-50 text-indigo-600 font-medium"
+                      : "text-slate-500 hover:bg-slate-100 hover:text-slate-700"
                   }`}
                 >
                   <item.icon size={16} className="shrink-0" />
@@ -149,28 +172,57 @@ const DevToolbox: React.FC = () => {
       {/* Main Content */}
       <main className="flex-1 overflow-y-auto p-8 bg-slate-50">
         <div className="max-w-4xl mx-auto">
-        <Suspense fallback={<div className="text-slate-400 text-sm">Loading…</div>}>
-          {activeTool === 'jwt'                && <JwtDecoder />}
-          {activeTool === 'password'           && <PasswordGenerator onCopy={handleCopy} copyStatus={copyStatus} />}
-          {activeTool === 'hash'               && <HashGenerator onCopy={handleCopy} copyStatus={copyStatus} />}
-          {activeTool === 'base64'             && <Base64Tool onCopy={handleCopy} copyStatus={copyStatus} />}
-          {activeTool === 'num-base'           && <NumberBaseConverter onCopy={handleCopy} copyStatus={copyStatus} />}
-          {activeTool === 'text-case'          && <TextCaseConverter onCopy={handleCopy} copyStatus={copyStatus} />}
-          {activeTool === 'postman-beautifier'  && <PostmanBeautifier />}
-          {activeTool === 'postman-editor'     && <PostmanEditor />}
-          {activeTool === 'postman-resequencer'&& <PostmanResequencer />}
-          {activeTool === 'postman-parser'     && <PostmanParser />}
-          {activeTool === 'url-gen'            && <UrlCombinationGenerator onCopy={handleCopy} copyStatus={copyStatus} />}
-          {activeTool === 'json'               && <JsonFormatter />}
-          {activeTool === 'json-extractor'     && <JsonFieldExtractor onCopy={handleCopy} copyStatus={copyStatus} />}
-          {activeTool === 'json-diff'          && <JsonDiff />}
-          {activeTool === 'list-comp'          && <ListComparator />}
-          {activeTool === 'duplicates'         && <FindDuplicates />}
-          {activeTool === 'regex'              && <RegexValidator />}
-          {activeTool === 'uuid'               && <UuidGenerator onCopy={handleCopy} copyStatus={copyStatus} />}
-          {activeTool === 'timestamp'          && <TimestampTool />}
-          {activeTool === 'test-player'        && <TestPlayerGenerator onCopy={handleCopy} copyStatus={copyStatus} />}
-        </Suspense>
+          <Suspense
+            fallback={<div className="text-slate-400 text-sm">Loading…</div>}
+          >
+            {activeTool === "jwt" && <JwtDecoder />}
+            {activeTool === "password" && (
+              <PasswordGenerator onCopy={handleCopy} copyStatus={copyStatus} />
+            )}
+            {activeTool === "hash" && (
+              <HashGenerator onCopy={handleCopy} copyStatus={copyStatus} />
+            )}
+            {activeTool === "base64" && (
+              <Base64Tool onCopy={handleCopy} copyStatus={copyStatus} />
+            )}
+            {activeTool === "num-base" && (
+              <NumberBaseConverter
+                onCopy={handleCopy}
+                copyStatus={copyStatus}
+              />
+            )}
+            {activeTool === "text-case" && (
+              <TextCaseConverter onCopy={handleCopy} copyStatus={copyStatus} />
+            )}
+            {activeTool === "postman-beautifier" && <PostmanBeautifier />}
+            {activeTool === "postman-editor" && <PostmanEditor />}
+            {activeTool === "postman-resequencer" && <PostmanResequencer />}
+            {activeTool === "postman-parser" && <PostmanParser />}
+            {activeTool === "url-gen" && (
+              <UrlCombinationGenerator
+                onCopy={handleCopy}
+                copyStatus={copyStatus}
+              />
+            )}
+            {activeTool === "json" && <JsonFormatter />}
+            {activeTool === "json-extractor" && (
+              <JsonFieldExtractor onCopy={handleCopy} copyStatus={copyStatus} />
+            )}
+            {activeTool === "json-diff" && <JsonDiff />}
+            {activeTool === "list-comp" && <ListComparator />}
+            {activeTool === "duplicates" && <FindDuplicates />}
+            {activeTool === "regex" && <RegexValidator />}
+            {activeTool === "uuid" && (
+              <UuidGenerator onCopy={handleCopy} copyStatus={copyStatus} />
+            )}
+            {activeTool === "timestamp" && <TimestampTool />}
+            {activeTool === "test-player" && (
+              <TestPlayerGenerator
+                onCopy={handleCopy}
+                copyStatus={copyStatus}
+              />
+            )}
+          </Suspense>
         </div>
       </main>
 
