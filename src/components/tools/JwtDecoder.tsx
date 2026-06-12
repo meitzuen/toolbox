@@ -326,112 +326,121 @@ const JwtDecoder: React.FC = () => {
         </div>
 
         {/* ── RIGHT: Decoded ──────────────────────────────────────────── */}
-        {header && payload && (
-          <div className="space-y-5">
+        <div className="space-y-5 sticky top-0 max-h-[calc(100vh-6rem)] overflow-y-auto pr-1">
 
-            {/* HEADER */}
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <SectionLabel>Header</SectionLabel>
-                  {parsed?.alg && (
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-100 text-rose-600 border border-rose-200 uppercase tracking-wide">
-                      {ALG_LABELS[parsed.alg] ?? parsed.alg}
-                    </span>
-                  )}
-                </div>
-                <CopyButton text={headerJson} id="jwt-header" copyStatus={copyStatus} onCopy={handleCopy} />
+          {/* HEADER */}
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <SectionLabel>Header</SectionLabel>
+                {parsed?.alg && (
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-100 text-rose-600 border border-rose-200 uppercase tracking-wide">
+                    {ALG_LABELS[parsed.alg] ?? parsed.alg}
+                  </span>
+                )}
               </div>
+              {header && <CopyButton text={headerJson} id="jwt-header" copyStatus={copyStatus} onCopy={handleCopy} />}
+            </div>
+            {header ? (
               <div
                 className="p-4 bg-slate-900 rounded-xl overflow-x-auto text-xs leading-relaxed"
                 dangerouslySetInnerHTML={{ __html: `<pre style="margin:0">${highlight(headerJson)}</pre>` }}
               />
-            </div>
-
-            {/* PAYLOAD */}
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <SectionLabel>Payload</SectionLabel>
-                <CopyButton text={payloadJson} id="jwt-payload" copyStatus={copyStatus} onCopy={handleCopy} />
+            ) : (
+              <div className="p-4 bg-slate-900 rounded-xl h-16 flex items-center">
+                <span className="text-slate-600 text-xs font-mono">— paste a JWT to decode —</span>
               </div>
-              <div
-                className="p-4 bg-slate-900 rounded-xl overflow-x-auto text-xs leading-relaxed"
-                dangerouslySetInnerHTML={{ __html: `<pre style="margin:0">${highlight(payloadJson)}</pre>` }}
-              />
-
-              {/* Standard claims breakdown */}
-              {claims && (claims.exp !== null || claims.iat !== null || claims.nbf !== null) && (
-                <div className="bg-slate-900 rounded-xl px-4 py-3 space-y-2.5">
-                  <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Claims Breakdown</p>
-                  {claims.exp !== null && (
-                    <ClaimRow
-                      label="exp" raw={claims.exp}
-                      date={new Date(claims.exp * 1000).toLocaleString()}
-                      badge={claims.expExpired
-                        ? { text: 'Expired', red: true }
-                        : { text: 'Valid',   green: true }}
-                    />
-                  )}
-                  {claims.iat !== null && (
-                    <ClaimRow label="iat" raw={claims.iat} date={new Date(claims.iat * 1000).toLocaleString()} />
-                  )}
-                  {claims.nbf !== null && (
-                    <ClaimRow
-                      label="nbf" raw={claims.nbf}
-                      date={new Date(claims.nbf * 1000).toLocaleString()}
-                      badge={claims.nbfNotYet ? { text: 'Not yet valid', amber: true } : undefined}
-                    />
-                  )}
-                </div>
-              )}
-            </div>
-
-            {/* VERIFY SIGNATURE */}
-            <div className="space-y-2">
-              <div className="flex items-center justify-between flex-wrap gap-2">
-                <SectionLabel>Verify Signature</SectionLabel>
-                <SigStatusBadge status={sigStatus} />
-              </div>
-
-              {/* Pseudocode */}
-              <div className="p-4 bg-slate-900 rounded-xl font-mono text-xs text-slate-400 leading-relaxed">
-                <span style={{ color: '#7dd3fc' }}>{parsed?.alg ?? 'ALGORITHM'}</span>
-                {'(\n  base64UrlEncode(header) + "." +\n  base64UrlEncode(payload),\n  '}
-                <span style={{ color: '#34d399' }}>
-                  {isHmac ? 'your-256-bit-secret' : 'your-public-key'}
-                </span>
-                {'\n)'}
-              </div>
-
-              <textarea
-                className="w-full h-20 p-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none font-mono text-xs resize-none bg-white leading-relaxed"
-                placeholder={isHmac
-                  ? 'Enter your HMAC secret…'
-                  : 'Paste PEM public key (-----BEGIN PUBLIC KEY-----)'}
-                value={secretOrKey}
-                onChange={e => { setSecretOrKey(e.target.value); resetSig(); }}
-                spellCheck={false}
-              />
-
-              {sigError && (
-                <p className="text-xs text-red-500 flex items-center gap-1">
-                  <AlertCircle size={12} /> {sigError}
-                </p>
-              )}
-
-              <button
-                onClick={handleVerify}
-                disabled={!secretOrKey.trim() || sigStatus === 'checking' || !parsed?.alg}
-                className="w-full bg-indigo-600 hover:bg-indigo-700 disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold py-2.5 px-4 rounded-lg transition-colors text-sm flex items-center justify-center gap-2"
-              >
-                {sigStatus === 'checking'
-                  ? <><RefreshCw size={14} className="animate-spin" /> Verifying…</>
-                  : 'Verify Signature'}
-              </button>
-            </div>
-
+            )}
           </div>
-        )}
+
+          {/* PAYLOAD */}
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <SectionLabel>Payload</SectionLabel>
+              {payload && <CopyButton text={payloadJson} id="jwt-payload" copyStatus={copyStatus} onCopy={handleCopy} />}
+            </div>
+            {payload ? (
+              <>
+                <div
+                  className="p-4 bg-slate-900 rounded-xl overflow-x-auto text-xs leading-relaxed"
+                  dangerouslySetInnerHTML={{ __html: `<pre style="margin:0">${highlight(payloadJson)}</pre>` }}
+                />
+                {claims && (claims.exp !== null || claims.iat !== null || claims.nbf !== null) && (
+                  <div className="bg-slate-900 rounded-xl px-4 py-3 space-y-2.5">
+                    <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Claims Breakdown</p>
+                    {claims.exp !== null && (
+                      <ClaimRow
+                        label="exp" raw={claims.exp}
+                        date={new Date(claims.exp * 1000).toLocaleString()}
+                        badge={claims.expExpired
+                          ? { text: 'Expired', red: true }
+                          : { text: 'Valid',   green: true }}
+                      />
+                    )}
+                    {claims.iat !== null && (
+                      <ClaimRow label="iat" raw={claims.iat} date={new Date(claims.iat * 1000).toLocaleString()} />
+                    )}
+                    {claims.nbf !== null && (
+                      <ClaimRow
+                        label="nbf" raw={claims.nbf}
+                        date={new Date(claims.nbf * 1000).toLocaleString()}
+                        badge={claims.nbfNotYet ? { text: 'Not yet valid', amber: true } : undefined}
+                      />
+                    )}
+                  </div>
+                )}
+              </>
+            ) : (
+              <div className="p-4 bg-slate-900 rounded-xl h-24 flex items-center">
+                <span className="text-slate-600 text-xs font-mono">— paste a JWT to decode —</span>
+              </div>
+            )}
+          </div>
+
+          {/* VERIFY SIGNATURE */}
+          <div className="space-y-2">
+            <div className="flex items-center justify-between flex-wrap gap-2">
+              <SectionLabel>Verify Signature</SectionLabel>
+              <SigStatusBadge status={sigStatus} />
+            </div>
+
+            <div className="p-4 bg-slate-900 rounded-xl font-mono text-xs text-slate-400 leading-relaxed">
+              <span style={{ color: '#7dd3fc' }}>{parsed?.alg ?? 'ALGORITHM'}</span>
+              {'(\n  base64UrlEncode(header) + "." +\n  base64UrlEncode(payload),\n  '}
+              <span style={{ color: '#34d399' }}>
+                {isHmac ? 'your-256-bit-secret' : 'your-public-key'}
+              </span>
+              {'\n)'}
+            </div>
+
+            <textarea
+              className="w-full h-20 p-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none font-mono text-xs resize-none bg-white leading-relaxed"
+              placeholder={isHmac
+                ? 'Enter your HMAC secret…'
+                : 'Paste PEM public key (-----BEGIN PUBLIC KEY-----)'}
+              value={secretOrKey}
+              onChange={e => { setSecretOrKey(e.target.value); resetSig(); }}
+              spellCheck={false}
+            />
+
+            {sigError && (
+              <p className="text-xs text-red-500 flex items-center gap-1">
+                <AlertCircle size={12} /> {sigError}
+              </p>
+            )}
+
+            <button
+              onClick={handleVerify}
+              disabled={!secretOrKey.trim() || sigStatus === 'checking' || !parsed?.alg}
+              className="w-full bg-indigo-600 hover:bg-indigo-700 disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold py-2.5 px-4 rounded-lg transition-colors text-sm flex items-center justify-center gap-2"
+            >
+              {sigStatus === 'checking'
+                ? <><RefreshCw size={14} className="animate-spin" /> Verifying…</>
+                : 'Verify Signature'}
+            </button>
+          </div>
+
+        </div>
       </div>
 
       {/* Info footer */}
