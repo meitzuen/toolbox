@@ -18,6 +18,7 @@ import {
   FolderDown,
   Edit3,
   Users,
+  ChevronDown,
 } from "lucide-react";
 
 const JwtDecoder = lazy(() => import("./tools/JwtDecoder"));
@@ -68,6 +69,15 @@ type ToolType =
 const DevToolbox: React.FC = () => {
   const [activeTool, setActiveTool] = useState<ToolType>("jwt");
   const [copyStatus, setCopyStatus] = useState<string | null>(null);
+  const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(new Set());
+
+  const toggleGroup = (title: string) => {
+    setCollapsedGroups((prev) => {
+      const next = new Set(prev);
+      next.has(title) ? next.delete(title) : next.add(title);
+      return next;
+    });
+  };
 
   const handleCopy = (text: string, id: string) => {
     navigator.clipboard.writeText(text);
@@ -77,11 +87,13 @@ const DevToolbox: React.FC = () => {
 
   const toolGroups = [
     {
-      title: "Jwt",
+      title: "JWT",
+      color: "#b5895a",
       items: [{ id: "jwt", label: "JWT Decoder", icon: ShieldCheck }],
     },
     {
       title: "JSON",
+      color: "#4caf50",
       items: [
         { id: "json", label: "JSON Formatter", icon: FileJson },
         { id: "json-extractor", label: "JSON Extractor", icon: ListFilter },
@@ -90,6 +102,7 @@ const DevToolbox: React.FC = () => {
     },
     {
       title: "Generators",
+      color: "#2196f3",
       items: [
         { id: "uuid", label: "UUID", icon: Fingerprint },
         { id: "timestamp", label: "Timestamp", icon: Clock },
@@ -100,6 +113,7 @@ const DevToolbox: React.FC = () => {
     },
     {
       title: "Postman Tools",
+      color: "#e53935",
       items: [
         {
           id: "postman-beautifier",
@@ -112,6 +126,7 @@ const DevToolbox: React.FC = () => {
     },
     {
       title: "Lists & Others",
+      color: "#ff9800",
       items: [
         { id: "list-comp", label: "List Comparator", icon: Columns },
         { id: "duplicates", label: "Find Duplicates", icon: ListFilter },
@@ -121,6 +136,7 @@ const DevToolbox: React.FC = () => {
     },
     {
       title: "Encoding",
+      color: "#9c27b0",
       items: [
         { id: "base64", label: "Base64", icon: ArrowLeftRight },
         { id: "num-base", label: "Number Bases", icon: Binary },
@@ -132,40 +148,57 @@ const DevToolbox: React.FC = () => {
   return (
     <div className="flex h-screen bg-slate-100 text-slate-800 font-sans overflow-hidden">
       {/* Sidebar */}
-      <aside className="w-72 bg-white shadow-md flex flex-col shrink-0">
-        <div className="px-5 py-6 bg-gradient-to-br from-indigo-600 to-violet-600">
-          <h1 className="text-2xl font-bold text-white flex items-center gap-2.5 tracking-tight">
-            <SearchCode size={24} />
+      <aside className="w-64 bg-[#1e1e1e] flex flex-col shrink-0">
+        <div className="px-5 py-5 bg-gradient-to-br from-indigo-600 to-violet-600">
+          <h1 className="text-xl font-bold text-white flex items-center gap-2.5 tracking-tight">
+            <SearchCode size={22} />
             Dev Tools
           </h1>
         </div>
-        <nav className="flex-1 px-3 py-4 space-y-4 overflow-y-auto">
-          {toolGroups.map((group) => (
+        <nav className="flex-1 px-2 py-3 overflow-y-auto">
+          {toolGroups.map((group, index) => {
+            const isCollapsed = collapsedGroups.has(group.title);
+            return (
             <div key={group.title}>
-              <h3 className="px-3 text-sm font-semibold text-slate-400 uppercase tracking-widest mb-1">
-                {group.title}
-              </h3>
-              <div className="space-y-0.5">
-                {group.items.map((item) => (
-                  <button
-                    key={item.id}
-                    onClick={() => setActiveTool(item.id as ToolType)}
-                    className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-150 text-left ${
-                      activeTool === item.id
-                        ? "bg-indigo-50 text-indigo-700 font-semibold shadow-sm ring-1 ring-indigo-100"
-                        : "text-slate-500 hover:bg-slate-50 hover:text-slate-800"
-                    }`}
-                  >
-                    <item.icon
-                      size={17}
-                      className={`shrink-0 ${activeTool === item.id ? "text-indigo-500" : "text-slate-400"}`}
-                    />
-                    <span className="text-sm truncate">{item.label}</span>
-                  </button>
-                ))}
-              </div>
+              {index !== 0 && (
+                <div className="mx-2 my-2 border-t border-white/10" />
+              )}
+              <button
+                onClick={() => toggleGroup(group.title)}
+                className="w-full flex items-center gap-1.5 px-2 py-1.5 mb-0.5 hover:bg-white/5 rounded-lg transition-colors"
+              >
+                <ChevronDown
+                  size={13}
+                  className={`text-gray-500 shrink-0 transition-transform duration-200 ${isCollapsed ? "-rotate-90" : ""}`}
+                />
+                <span className="text-xs font-semibold text-gray-500 uppercase tracking-widest">
+                  {group.title}
+                </span>
+              </button>
+              {!isCollapsed && (
+                <div>
+                  {group.items.map((item) => (
+                    <button
+                      key={item.id}
+                      onClick={() => setActiveTool(item.id as ToolType)}
+                      className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors duration-100 text-left ${
+                        activeTool === item.id
+                          ? "bg-white/10 text-white"
+                          : "text-gray-400 hover:bg-white/5 hover:text-gray-200"
+                      }`}
+                    >
+                      <span
+                        className="w-3.5 h-3.5 rounded-sm shrink-0"
+                        style={{ backgroundColor: group.color }}
+                      />
+                      <span className="text-sm truncate">{item.label}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
-          ))}
+            );
+          })}
         </nav>
       </aside>
 
