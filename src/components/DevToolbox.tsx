@@ -9,6 +9,7 @@ import {
   Lock,
   Check,
   ListFilter,
+  Wand2,
   Link2,
   ArrowLeftRight,
   Hash,
@@ -36,6 +37,7 @@ const UuidGenerator = lazy(() => import("./tools/UuidGenerator"));
 const TimestampTool = lazy(() => import("./tools/TimestampTool"));
 const PasswordGenerator = lazy(() => import("./tools/PasswordGenerator"));
 const FindDuplicates = lazy(() => import("./tools/FindDuplicates"));
+const ListPrettifier = lazy(() => import("./tools/ListPrettifier"));
 const UrlCombinationGenerator = lazy(
   () => import("./tools/UrlCombinationGenerator"),
 );
@@ -59,6 +61,7 @@ type ToolType =
   | "json-diff"
   | "list-comp"
   | "duplicates"
+  | "list-pretty"
   | "regex"
   | "text-case"
   | "uuid"
@@ -130,6 +133,7 @@ const DevToolbox: React.FC = () => {
       items: [
         { id: "list-comp", label: "List Comparator", icon: Columns },
         { id: "duplicates", label: "Find Duplicates", icon: ListFilter },
+        { id: "list-pretty", label: "List Prettifier", icon: Wand2 },
         { id: "url-gen", label: "URL Combinator", icon: Link2 },
         { id: "regex", label: "Regex Validator", icon: SearchCode },
       ],
@@ -249,6 +253,9 @@ const DevToolbox: React.FC = () => {
             {activeTool === "json-diff" && <JsonDiff />}
             {activeTool === "list-comp" && <ListComparator />}
             {activeTool === "duplicates" && <FindDuplicates />}
+            {activeTool === "list-pretty" && (
+              <ListPrettifier onCopy={handleCopy} copyStatus={copyStatus} />
+            )}
             {activeTool === "regex" && <RegexValidator />}
             {activeTool === "uuid" && (
               <UuidGenerator onCopy={handleCopy} copyStatus={copyStatus} />
