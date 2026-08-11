@@ -246,7 +246,9 @@ const DevToolbox: React.FC = () => {
                 copyStatus={copyStatus}
               />
             )}
-            {activeTool === "json" && <JsonFormatter />}
+            {activeTool === "json" && (
+              <JsonFormatter onCopy={handleCopy} copyStatus={copyStatus} />
+            )}
             {activeTool === "json-extractor" && (
               <JsonFieldExtractor onCopy={handleCopy} copyStatus={copyStatus} />
             )}
