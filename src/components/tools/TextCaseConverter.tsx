@@ -19,16 +19,17 @@ const toWords = (str: string): string[] =>
 const cap = (w: string) => w.charAt(0).toUpperCase() + w.slice(1);
 
 const CASES = [
-  { id: 'camel',     label: 'camelCase',          fn: (w: string[]) => w.map((x, i) => i === 0 ? x : cap(x)).join('') },
-  { id: 'pascal',    label: 'PascalCase',          fn: (w: string[]) => w.map(cap).join('') },
-  { id: 'snake',     label: 'snake_case',          fn: (w: string[]) => w.join('_') },
-  { id: 'screaming', label: 'SCREAMING_SNAKE_CASE',fn: (w: string[]) => w.join('_').toUpperCase() },
-  { id: 'kebab',     label: 'kebab-case',          fn: (w: string[]) => w.join('-') },
-  { id: 'cobol',     label: 'COBOL-CASE',          fn: (w: string[]) => w.join('-').toUpperCase() },
-  { id: 'title',     label: 'Title Case',          fn: (w: string[]) => w.map(cap).join(' ') },
-  { id: 'sentence',  label: 'Sentence case',       fn: (w: string[]) => { const s = w.join(' '); return s.charAt(0).toUpperCase() + s.slice(1); } },
-  { id: 'upper',     label: 'UPPER CASE',          fn: (w: string[]) => w.join(' ').toUpperCase() },
-  { id: 'lower',     label: 'lower case',          fn: (w: string[]) => w.join(' ') },
+  { id: 'camel',     label: 'camelCase',          fn: (w: string[], _raw: string) => w.map((x, i) => i === 0 ? x : cap(x)).join('') },
+  { id: 'pascal',    label: 'PascalCase',          fn: (w: string[], _raw: string) => w.map(cap).join('') },
+  { id: 'snake',     label: 'snake_case',          fn: (w: string[], _raw: string) => w.join('_') },
+  { id: 'screaming', label: 'SCREAMING_SNAKE_CASE',fn: (w: string[], _raw: string) => w.join('_').toUpperCase() },
+  { id: 'kebab',     label: 'kebab-case',          fn: (w: string[], _raw: string) => w.join('-') },
+  { id: 'cobol',     label: 'COBOL-CASE',          fn: (w: string[], _raw: string) => w.join('-').toUpperCase() },
+  { id: 'title',     label: 'Title Case',          fn: (w: string[], _raw: string) => w.map(cap).join(' ') },
+  { id: 'sentence',  label: 'Sentence case',       fn: (w: string[], _raw: string) => { const s = w.join(' '); return s.charAt(0).toUpperCase() + s.slice(1); } },
+  // upper/lower preserve the original text as-is (punctuation, spacing, digits) and only change letter case
+  { id: 'upper',     label: 'UPPER CASE',          fn: (_w: string[], raw: string) => raw.toUpperCase() },
+  { id: 'lower',     label: 'lower case',          fn: (_w: string[], raw: string) => raw.toLowerCase() },
 ];
 
 const TextCaseConverter: React.FC<TextCaseConverterProps> = ({ onCopy, copyStatus }) => {
@@ -37,8 +38,8 @@ const TextCaseConverter: React.FC<TextCaseConverterProps> = ({ onCopy, copyStatu
   const words = useMemo(() => toWords(input), [input]);
 
   const results = useMemo(
-    () => CASES.map(c => ({ ...c, value: words.length > 0 ? c.fn(words) : '' })),
-    [words]
+    () => CASES.map(c => ({ ...c, value: input.trim().length > 0 ? c.fn(words, input) : '' })),
+    [words, input]
   );
 
   return (
