@@ -20,6 +20,8 @@ import {
   Edit3,
   Users,
   ChevronDown,
+  ImagePlus,
+  Percent,
 } from "lucide-react";
 
 const JwtDecoder = lazy(() => import("./tools/JwtDecoder"));
@@ -46,6 +48,10 @@ const HashGenerator = lazy(() => import("./tools/HashGenerator"));
 const TextCaseConverter = lazy(() => import("./tools/TextCaseConverter"));
 const NumberBaseConverter = lazy(() => import("./tools/NumberBaseConverter"));
 const TestPlayerGenerator = lazy(() => import("./tools/TestPlayerGenerator"));
+const ImagePlaceholderGenerator = lazy(
+  () => import("./tools/ImagePlaceholderGenerator"),
+);
+const UrlEncoderDecoder = lazy(() => import("./tools/UrlEncoderDecoder"));
 
 type ToolType =
   | "jwt"
@@ -67,7 +73,9 @@ type ToolType =
   | "uuid"
   | "timestamp"
   | "num-base"
-  | "test-player";
+  | "test-player"
+  | "image-gen"
+  | "url-encode";
 
 const DevToolbox: React.FC = () => {
   const [activeTool, setActiveTool] = useState<ToolType>("jwt");
@@ -143,8 +151,16 @@ const DevToolbox: React.FC = () => {
       color: "#9c27b0",
       items: [
         { id: "base64", label: "Base64", icon: ArrowLeftRight },
+        { id: "url-encode", label: "URL Encoder / Decoder", icon: Percent },
         { id: "num-base", label: "Number Bases", icon: Binary },
         { id: "text-case", label: "Case Converter", icon: Type },
+      ],
+    },
+    {
+      title: "Images",
+      color: "#06b6d4",
+      items: [
+        { id: "image-gen", label: "Test Image Generator", icon: ImagePlus },
       ],
     },
   ];
@@ -268,6 +284,10 @@ const DevToolbox: React.FC = () => {
                 onCopy={handleCopy}
                 copyStatus={copyStatus}
               />
+            )}
+            {activeTool === "image-gen" && <ImagePlaceholderGenerator />}
+            {activeTool === "url-encode" && (
+              <UrlEncoderDecoder onCopy={handleCopy} copyStatus={copyStatus} />
             )}
           </Suspense>
         </div>
