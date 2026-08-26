@@ -10,27 +10,34 @@ const JsonFieldExtractor: React.FC<JsonFieldExtractorProps> = ({ onCopy, copySta
   const [input, setInput] = useState('');
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
 
-  const parsedData = useMemo(() => {
-    if (!input.trim()) return [];
+  // Tracks how the input was shaped, so the output can mirror it:
+  // 'array' when the input parsed as a single JSON value (object or array),
+  // 'ndjson' when it had to be parsed line-by-line.
+  const parseResult = useMemo(() => {
+    if (!input.trim()) return { data: [] as unknown[], format: 'array' as const };
     const trimmed = input.trim();
-    
+
     // Try parsing as a single JSON (Object or Array)
     try {
       const data = JSON.parse(trimmed);
-      return Array.isArray(data) ? data : [data];
+      return { data: Array.isArray(data) ? data : [data], format: 'array' as const };
     } catch (e) {
       // If it fails, try parsing as newline-separated JSON objects
       try {
-        return trimmed
+        const data = trimmed
           .split('\n')
           .map(line => line.trim())
           .filter(line => line.length > 0)
           .map(line => JSON.parse(line));
+        return { data, format: 'ndjson' as const };
       } catch (e2) {
-        return null;
+        return { data: null, format: null };
       }
     }
   }, [input]);
+
+  const parsedData = parseResult.data;
+  const inputFormat = parseResult.format;
 
   const availableKeys = useMemo(() => {
     if (!parsedData || !Array.isArray(parsedData)) return [];
@@ -49,24 +56,19 @@ const JsonFieldExtractor: React.FC<JsonFieldExtractorProps> = ({ onCopy, copySta
     );
   };
 
-  const results = useMemo(() => {
+  // The extracted values themselves (kept as real JS values, not pre-stringified),
+  // so the final text formatting can decide how to render them.
+  const resultValues = useMemo(() => {
     if (selectedKeys.length === 0 || !parsedData) return [];
 
-    // Single key selected: extract raw values, one per line (backwards compatible behavior)
     if (selectedKeys.length === 1) {
       const key = selectedKeys[0];
       return parsedData
-        .map(item => {
-          if (item && typeof item === 'object' && item.hasOwnProperty(key)) {
-            const val = item[key];
-            return typeof val === 'object' ? JSON.stringify(val) : String(val);
-          }
-          return null;
-        })
-        .filter(val => val !== null);
+        .filter(item => item && typeof item === 'object' && item.hasOwnProperty(key))
+        .map(item => item[key]);
     }
 
-    // Multiple keys selected: extract a JSON object containing only the selected keys
+    // Multiple keys selected: extract an object containing only the selected keys
     return parsedData
       .filter(item => item && typeof item === 'object')
       .map(item => {
@@ -76,13 +78,30 @@ const JsonFieldExtractor: React.FC<JsonFieldExtractorProps> = ({ onCopy, copySta
             extracted[key] = item[key];
           }
         });
-        return JSON.stringify(extracted);
+        return extracted;
       });
   }, [parsedData, selectedKeys]);
 
+  // When the input was a JSON array, mirror that shape in the output (a real JSON array).
+  // When the input was newline-separated JSON, keep the original line-by-line behavior.
+  const outputText = useMemo(() => {
+    if (resultValues.length === 0) return '';
+
+    if (inputFormat === 'array') {
+      return JSON.stringify(resultValues, null, 2);
+    }
+
+    if (selectedKeys.length === 1) {
+      return resultValues
+        .map(val => (val && typeof val === 'object' ? JSON.stringify(val) : String(val)))
+        .join('\n');
+    }
+    return resultValues.map(val => JSON.stringify(val)).join('\n');
+  }, [resultValues, inputFormat, selectedKeys]);
+
   const handleCopyResults = () => {
-    if (results.length > 0) {
-      onCopy(results.join('\n'), 'json-extractor');
+    if (outputText) {
+      onCopy(outputText, 'json-extractor');
     }
   };
 
@@ -153,12 +172,12 @@ const JsonFieldExtractor: React.FC<JsonFieldExtractorProps> = ({ onCopy, copySta
                 <List size={14} className="text-indigo-400" />
               </div>
               <span className="text-xs font-bold text-slate-300 uppercase tracking-widest">
-                {results.length} {results.length === 1 ? 'Value' : 'Values'} Extracted
+                {resultValues.length} {resultValues.length === 1 ? 'Value' : 'Values'} Extracted
               </span>
             </div>
             <button
               onClick={handleCopyResults}
-              disabled={results.length === 0}
+              disabled={resultValues.length === 0}
               className={`transition-all p-2 rounded-lg flex items-center gap-2 text-xs font-medium ${
                 copyStatus === 'json-extractor' 
                   ? 'bg-green-500/10 text-green-400' 
@@ -173,8 +192,8 @@ const JsonFieldExtractor: React.FC<JsonFieldExtractorProps> = ({ onCopy, copySta
             </button>
           </div>
           <div className="h-48 p-4 font-mono text-[11px] text-blue-300/90 overflow-auto whitespace-pre leading-relaxed scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent">
-            {results.length > 0 ? (
-              results.join('\n')
+            {outputText ? (
+              outputText
             ) : (
               <div className="h-full flex flex-col items-center justify-center text-slate-500 italic">
                  <p>Paste JSON and select field(s) to see extracted values</p>
