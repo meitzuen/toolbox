@@ -8,7 +8,7 @@ interface JsonFieldExtractorProps {
 
 const JsonFieldExtractor: React.FC<JsonFieldExtractorProps> = ({ onCopy, copyStatus }) => {
   const [input, setInput] = useState('');
-  const [selectedKey, setSelectedKey] = useState<string | null>(null);
+  const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
 
   const parsedData = useMemo(() => {
     if (!input.trim()) return [];
@@ -43,18 +43,42 @@ const JsonFieldExtractor: React.FC<JsonFieldExtractorProps> = ({ onCopy, copySta
     return Array.from(keys).sort();
   }, [parsedData]);
 
+  const toggleKey = (key: string) => {
+    setSelectedKeys(prev =>
+      prev.includes(key) ? prev.filter(k => k !== key) : [...prev, key]
+    );
+  };
+
   const results = useMemo(() => {
-    if (!selectedKey || !parsedData) return [];
+    if (selectedKeys.length === 0 || !parsedData) return [];
+
+    // Single key selected: extract raw values, one per line (backwards compatible behavior)
+    if (selectedKeys.length === 1) {
+      const key = selectedKeys[0];
+      return parsedData
+        .map(item => {
+          if (item && typeof item === 'object' && item.hasOwnProperty(key)) {
+            const val = item[key];
+            return typeof val === 'object' ? JSON.stringify(val) : String(val);
+          }
+          return null;
+        })
+        .filter(val => val !== null);
+    }
+
+    // Multiple keys selected: extract a JSON object containing only the selected keys
     return parsedData
+      .filter(item => item && typeof item === 'object')
       .map(item => {
-        if (item && typeof item === 'object' && item.hasOwnProperty(selectedKey)) {
-          const val = item[selectedKey];
-          return typeof val === 'object' ? JSON.stringify(val) : String(val);
-        }
-        return null;
-      })
-      .filter(val => val !== null);
-  }, [parsedData, selectedKey]);
+        const extracted: Record<string, unknown> = {};
+        selectedKeys.forEach(key => {
+          if (item.hasOwnProperty(key)) {
+            extracted[key] = item[key];
+          }
+        });
+        return JSON.stringify(extracted);
+      });
+  }, [parsedData, selectedKeys]);
 
   const handleCopyResults = () => {
     if (results.length > 0) {
@@ -81,7 +105,7 @@ const JsonFieldExtractor: React.FC<JsonFieldExtractorProps> = ({ onCopy, copySta
             value={input}
             onChange={(e) => {
               setInput(e.target.value);
-              setSelectedKey(null);
+              setSelectedKeys([]);
             }}
           />
           {input && parsedData === null && (
@@ -91,16 +115,26 @@ const JsonFieldExtractor: React.FC<JsonFieldExtractorProps> = ({ onCopy, copySta
 
         {availableKeys.length > 0 && (
           <div className="space-y-3">
-            <label className="text-xs font-bold text-slate-400 uppercase tracking-wider px-1">
-              Select Field to Extract
-            </label>
+            <div className="flex items-center justify-between px-1">
+              <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+                Select Field(s) to Extract
+              </label>
+              {selectedKeys.length > 0 && (
+                <button
+                  onClick={() => setSelectedKeys([])}
+                  className="text-xs font-medium text-slate-400 hover:text-indigo-600 transition-colors"
+                >
+                  Clear ({selectedKeys.length})
+                </button>
+              )}
+            </div>
             <div className="flex flex-wrap gap-2">
               {availableKeys.map(key => (
                 <button
                   key={key}
-                  onClick={() => setSelectedKey(key)}
+                  onClick={() => toggleKey(key)}
                   className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all border ${
-                    selectedKey === key
+                    selectedKeys.includes(key)
                       ? 'bg-indigo-600 border-indigo-600 text-white shadow-md'
                       : 'bg-white border-slate-200 text-slate-600 hover:border-indigo-300 hover:bg-indigo-50'
                   }`}
@@ -143,7 +177,7 @@ const JsonFieldExtractor: React.FC<JsonFieldExtractorProps> = ({ onCopy, copySta
               results.join('\n')
             ) : (
               <div className="h-full flex flex-col items-center justify-center text-slate-500 italic">
-                 <p>Paste JSON and select a key to see extracted values</p>
+                 <p>Paste JSON and select field(s) to see extracted values</p>
               </div>
             )}
           </div>
