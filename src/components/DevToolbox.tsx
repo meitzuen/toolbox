@@ -35,6 +35,7 @@ import {
   FileText,
   Database,
   QrCode,
+  BookOpen,
 } from "lucide-react";
 
 const JwtDecoder = lazy(() => import("./tools/JwtDecoder"));
@@ -78,6 +79,7 @@ const EntityEscape = lazy(() => import("./tools/EntityEscape"));
 const TextStats = lazy(() => import("./tools/TextStats"));
 const MockDataGenerator = lazy(() => import("./tools/MockDataGenerator"));
 const QrCodeTool = lazy(() => import("./tools/QrCodeTool"));
+const MarkdownPreview = lazy(() => import("./tools/MarkdownPreview"));
 
 type ToolType =
   | "jwt"
@@ -114,7 +116,8 @@ type ToolType =
   | "entity"
   | "text-stats"
   | "mock-data"
-  | "qr";
+  | "qr"
+  | "markdown";
 
 const DevToolbox: React.FC = () => {
   const [activeTool, setActiveTool] = useState<ToolType>("jwt");
@@ -193,6 +196,7 @@ const DevToolbox: React.FC = () => {
         { id: "text-diff", label: "Text Diff", icon: Diff },
         { id: "code-format", label: "HTML/XML/CSS/SQL Format", icon: Code },
         { id: "text-stats", label: "Text Stats & Cleanup", icon: FileText },
+        { id: "markdown", label: "Markdown Preview", icon: BookOpen },
       ],
     },
     {
@@ -373,6 +377,9 @@ const DevToolbox: React.FC = () => {
             )}
             {activeTool === "qr" && (
               <QrCodeTool onCopy={handleCopy} copyStatus={copyStatus} />
+            )}
+            {activeTool === "markdown" && (
+              <MarkdownPreview onCopy={handleCopy} copyStatus={copyStatus} />
             )}
           </Suspense>
         </div>
