@@ -32,6 +32,7 @@ import {
   Palette,
   Code,
   Sigma,
+  FileText,
 } from "lucide-react";
 
 const JwtDecoder = lazy(() => import("./tools/JwtDecoder"));
@@ -72,6 +73,7 @@ const DateCalculator = lazy(() => import("./tools/DateCalculator"));
 const ColorConverter = lazy(() => import("./tools/ColorConverter"));
 const CodeFormatter = lazy(() => import("./tools/CodeFormatter"));
 const EntityEscape = lazy(() => import("./tools/EntityEscape"));
+const TextStats = lazy(() => import("./tools/TextStats"));
 
 type ToolType =
   | "jwt"
@@ -105,7 +107,8 @@ type ToolType =
   | "date-calc"
   | "color"
   | "code-format"
-  | "entity";
+  | "entity"
+  | "text-stats";
 
 const DevToolbox: React.FC = () => {
   const [activeTool, setActiveTool] = useState<ToolType>("jwt");
@@ -181,6 +184,7 @@ const DevToolbox: React.FC = () => {
         { id: "regex", label: "Regex Validator", icon: SearchCode },
         { id: "text-diff", label: "Text Diff", icon: Diff },
         { id: "code-format", label: "HTML/XML/CSS/SQL Format", icon: Code },
+        { id: "text-stats", label: "Text Stats & Cleanup", icon: FileText },
       ],
     },
     {
@@ -352,6 +356,9 @@ const DevToolbox: React.FC = () => {
             )}
             {activeTool === "entity" && (
               <EntityEscape onCopy={handleCopy} copyStatus={copyStatus} />
+            )}
+            {activeTool === "text-stats" && (
+              <TextStats onCopy={handleCopy} copyStatus={copyStatus} />
             )}
           </Suspense>
         </div>
