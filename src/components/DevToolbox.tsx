@@ -33,6 +33,7 @@ import {
   Code,
   Sigma,
   FileText,
+  Database,
 } from "lucide-react";
 
 const JwtDecoder = lazy(() => import("./tools/JwtDecoder"));
@@ -74,6 +75,7 @@ const ColorConverter = lazy(() => import("./tools/ColorConverter"));
 const CodeFormatter = lazy(() => import("./tools/CodeFormatter"));
 const EntityEscape = lazy(() => import("./tools/EntityEscape"));
 const TextStats = lazy(() => import("./tools/TextStats"));
+const MockDataGenerator = lazy(() => import("./tools/MockDataGenerator"));
 
 type ToolType =
   | "jwt"
@@ -108,7 +110,8 @@ type ToolType =
   | "color"
   | "code-format"
   | "entity"
-  | "text-stats";
+  | "text-stats"
+  | "mock-data";
 
 const DevToolbox: React.FC = () => {
   const [activeTool, setActiveTool] = useState<ToolType>("jwt");
@@ -157,6 +160,7 @@ const DevToolbox: React.FC = () => {
         { id: "hash", label: "Hash Generator", icon: Hash },
         { id: "cron", label: "Cron Parser", icon: CalendarClock },
         { id: "date-calc", label: "Date Calculator", icon: CalendarDays },
+        { id: "mock-data", label: "Mock Data / Lorem", icon: Database },
       ],
     },
     {
@@ -359,6 +363,9 @@ const DevToolbox: React.FC = () => {
             )}
             {activeTool === "text-stats" && (
               <TextStats onCopy={handleCopy} copyStatus={copyStatus} />
+            )}
+            {activeTool === "mock-data" && (
+              <MockDataGenerator onCopy={handleCopy} copyStatus={copyStatus} />
             )}
           </Suspense>
         </div>
