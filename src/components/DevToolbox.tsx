@@ -36,6 +36,7 @@ import {
   Database,
   QrCode,
   BookOpen,
+  KeyRound,
 } from "lucide-react";
 
 const JwtDecoder = lazy(() => import("./tools/JwtDecoder"));
@@ -80,6 +81,7 @@ const TextStats = lazy(() => import("./tools/TextStats"));
 const MockDataGenerator = lazy(() => import("./tools/MockDataGenerator"));
 const QrCodeTool = lazy(() => import("./tools/QrCodeTool"));
 const MarkdownPreview = lazy(() => import("./tools/MarkdownPreview"));
+const ChmodCalculator = lazy(() => import("./tools/ChmodCalculator"));
 
 type ToolType =
   | "jwt"
@@ -117,7 +119,8 @@ type ToolType =
   | "text-stats"
   | "mock-data"
   | "qr"
-  | "markdown";
+  | "markdown"
+  | "chmod";
 
 const DevToolbox: React.FC = () => {
   const [activeTool, setActiveTool] = useState<ToolType>("jwt");
@@ -210,6 +213,7 @@ const DevToolbox: React.FC = () => {
         { id: "url-parser", label: "URL Parser", icon: Globe },
         { id: "color", label: "Color Converter", icon: Palette },
         { id: "entity", label: "Entity / Unicode Escape", icon: Sigma },
+        { id: "chmod", label: "Chmod Calculator", icon: KeyRound },
       ],
     },
     {
@@ -380,6 +384,9 @@ const DevToolbox: React.FC = () => {
             )}
             {activeTool === "markdown" && (
               <MarkdownPreview onCopy={handleCopy} copyStatus={copyStatus} />
+            )}
+            {activeTool === "chmod" && (
+              <ChmodCalculator onCopy={handleCopy} copyStatus={copyStatus} />
             )}
           </Suspense>
         </div>
