@@ -24,6 +24,7 @@ import {
   Percent,
   Repeat,
   Braces,
+  Terminal,
 } from "lucide-react";
 
 const JwtDecoder = lazy(() => import("./tools/JwtDecoder"));
@@ -56,6 +57,7 @@ const ImagePlaceholderGenerator = lazy(
 const UrlEncoderDecoder = lazy(() => import("./tools/UrlEncoderDecoder"));
 const JsonConverter = lazy(() => import("./tools/JsonConverter"));
 const JsonToTypes = lazy(() => import("./tools/JsonToTypes"));
+const CurlConverter = lazy(() => import("./tools/CurlConverter"));
 
 type ToolType =
   | "jwt"
@@ -81,7 +83,8 @@ type ToolType =
   | "image-gen"
   | "url-encode"
   | "json-convert"
-  | "json-types";
+  | "json-types"
+  | "curl";
 
 const DevToolbox: React.FC = () => {
   const [activeTool, setActiveTool] = useState<ToolType>("jwt");
@@ -141,6 +144,7 @@ const DevToolbox: React.FC = () => {
         },
         { id: "postman-editor", label: "Postman Editor", icon: Edit3 },
         { id: "postman-parser", label: "Postman Parser", icon: FolderDown },
+        { id: "curl", label: "cURL Converter", icon: Terminal },
       ],
     },
     {
@@ -302,6 +306,9 @@ const DevToolbox: React.FC = () => {
             )}
             {activeTool === "json-types" && (
               <JsonToTypes onCopy={handleCopy} copyStatus={copyStatus} />
+            )}
+            {activeTool === "curl" && (
+              <CurlConverter onCopy={handleCopy} copyStatus={copyStatus} />
             )}
           </Suspense>
         </div>
