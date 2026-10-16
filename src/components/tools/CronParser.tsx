@@ -81,7 +81,11 @@ function describe(p: Parsed[]): string {
   else if (hour.raw === '*' && min.values.size === 1) time = min.values.has(0) ? 'Every hour, on the hour' : `Every hour at minute ${sorted(min)[0]}`;
   else if (hour.raw === '*') time = `At minutes ${list(sorted(min).map(String))} of every hour`;
   else if (/^\*\/\d+$/.test(hour.raw) && min.values.size === 1) time = `At minute ${sorted(min)[0]} past every ${hour.raw.slice(2)} hours`;
-  else {
+  else if (/^\*\/\d+$/.test(min.raw)) {
+    const hs = sorted(hour);
+    const contiguous = hs.every((h, i) => i === 0 || h === hs[i - 1] + 1);
+    time = `Every ${min.raw.slice(2)} minutes, ${contiguous && hs.length > 1 ? `between ${pad(hs[0])}:00 and ${pad(hs[hs.length - 1])}:59` : `during hour ${list(hs.map(String))}`}`;
+  } else {
     const times = sorted(hour).flatMap((h) => sorted(min).map((m) => `${pad(h)}:${pad(m)}`));
     time = `At ${times.length > 6 ? `${times.length} times a day (${times[0]}…${times[times.length - 1]})` : list(times)}`;
   }
