@@ -39,6 +39,7 @@ import {
   KeyRound,
   ShieldPlus,
   FileImage,
+  GitCompareArrows,
 } from "lucide-react";
 
 const JwtDecoder = lazy(() => import("./tools/JwtDecoder"));
@@ -86,6 +87,7 @@ const MarkdownPreview = lazy(() => import("./tools/MarkdownPreview"));
 const ChmodCalculator = lazy(() => import("./tools/ChmodCalculator"));
 const JwtEncoder = lazy(() => import("./tools/JwtEncoder"));
 const ImageBase64 = lazy(() => import("./tools/ImageBase64"));
+const PostmanCollectionDiff = lazy(() => import("./tools/PostmanCollectionDiff"));
 
 type ToolType =
   | "jwt"
@@ -126,7 +128,8 @@ type ToolType =
   | "markdown"
   | "chmod"
   | "jwt-encode"
-  | "image-b64";
+  | "image-b64"
+  | "postman-diff";
 
 const DevToolbox: React.FC = () => {
   const [activeTool, setActiveTool] = useState<ToolType>("jwt");
@@ -192,6 +195,7 @@ const DevToolbox: React.FC = () => {
         { id: "postman-editor", label: "Postman Editor", icon: Edit3 },
         { id: "postman-parser", label: "Postman Parser", icon: FolderDown },
         { id: "curl", label: "cURL Converter", icon: Terminal },
+        { id: "postman-diff", label: "Postman Collection Diff", icon: GitCompareArrows },
       ],
     },
     {
@@ -402,6 +406,7 @@ const DevToolbox: React.FC = () => {
             {activeTool === "image-b64" && (
               <ImageBase64 onCopy={handleCopy} copyStatus={copyStatus} />
             )}
+            {activeTool === "postman-diff" && <PostmanCollectionDiff />}
           </Suspense>
         </div>
       </main>
