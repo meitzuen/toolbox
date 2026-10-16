@@ -29,6 +29,7 @@ import {
   CalendarClock,
   Globe,
   CalendarDays,
+  Palette,
 } from "lucide-react";
 
 const JwtDecoder = lazy(() => import("./tools/JwtDecoder"));
@@ -66,6 +67,7 @@ const TextDiff = lazy(() => import("./tools/TextDiff"));
 const CronParser = lazy(() => import("./tools/CronParser"));
 const UrlParser = lazy(() => import("./tools/UrlParser"));
 const DateCalculator = lazy(() => import("./tools/DateCalculator"));
+const ColorConverter = lazy(() => import("./tools/ColorConverter"));
 
 type ToolType =
   | "jwt"
@@ -96,7 +98,8 @@ type ToolType =
   | "text-diff"
   | "cron"
   | "url-parser"
-  | "date-calc";
+  | "date-calc"
+  | "color";
 
 const DevToolbox: React.FC = () => {
   const [activeTool, setActiveTool] = useState<ToolType>("jwt");
@@ -182,6 +185,7 @@ const DevToolbox: React.FC = () => {
         { id: "num-base", label: "Number Bases", icon: Binary },
         { id: "text-case", label: "Case Converter", icon: Type },
         { id: "url-parser", label: "URL Parser", icon: Globe },
+        { id: "color", label: "Color Converter", icon: Palette },
       ],
     },
     {
@@ -332,6 +336,9 @@ const DevToolbox: React.FC = () => {
               <UrlParser onCopy={handleCopy} copyStatus={copyStatus} />
             )}
             {activeTool === "date-calc" && <DateCalculator />}
+            {activeTool === "color" && (
+              <ColorConverter onCopy={handleCopy} copyStatus={copyStatus} />
+            )}
           </Suspense>
         </div>
       </main>
