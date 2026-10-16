@@ -28,6 +28,7 @@ import {
   Diff,
   CalendarClock,
   Globe,
+  CalendarDays,
 } from "lucide-react";
 
 const JwtDecoder = lazy(() => import("./tools/JwtDecoder"));
@@ -64,6 +65,7 @@ const CurlConverter = lazy(() => import("./tools/CurlConverter"));
 const TextDiff = lazy(() => import("./tools/TextDiff"));
 const CronParser = lazy(() => import("./tools/CronParser"));
 const UrlParser = lazy(() => import("./tools/UrlParser"));
+const DateCalculator = lazy(() => import("./tools/DateCalculator"));
 
 type ToolType =
   | "jwt"
@@ -93,7 +95,8 @@ type ToolType =
   | "curl"
   | "text-diff"
   | "cron"
-  | "url-parser";
+  | "url-parser"
+  | "date-calc";
 
 const DevToolbox: React.FC = () => {
   const [activeTool, setActiveTool] = useState<ToolType>("jwt");
@@ -141,6 +144,7 @@ const DevToolbox: React.FC = () => {
         { id: "password", label: "Password", icon: Lock },
         { id: "hash", label: "Hash Generator", icon: Hash },
         { id: "cron", label: "Cron Parser", icon: CalendarClock },
+        { id: "date-calc", label: "Date Calculator", icon: CalendarDays },
       ],
     },
     {
@@ -327,6 +331,7 @@ const DevToolbox: React.FC = () => {
             {activeTool === "url-parser" && (
               <UrlParser onCopy={handleCopy} copyStatus={copyStatus} />
             )}
+            {activeTool === "date-calc" && <DateCalculator />}
           </Suspense>
         </div>
       </main>
