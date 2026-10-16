@@ -34,6 +34,7 @@ import {
   Sigma,
   FileText,
   Database,
+  QrCode,
 } from "lucide-react";
 
 const JwtDecoder = lazy(() => import("./tools/JwtDecoder"));
@@ -76,6 +77,7 @@ const CodeFormatter = lazy(() => import("./tools/CodeFormatter"));
 const EntityEscape = lazy(() => import("./tools/EntityEscape"));
 const TextStats = lazy(() => import("./tools/TextStats"));
 const MockDataGenerator = lazy(() => import("./tools/MockDataGenerator"));
+const QrCodeTool = lazy(() => import("./tools/QrCodeTool"));
 
 type ToolType =
   | "jwt"
@@ -111,7 +113,8 @@ type ToolType =
   | "code-format"
   | "entity"
   | "text-stats"
-  | "mock-data";
+  | "mock-data"
+  | "qr";
 
 const DevToolbox: React.FC = () => {
   const [activeTool, setActiveTool] = useState<ToolType>("jwt");
@@ -161,6 +164,7 @@ const DevToolbox: React.FC = () => {
         { id: "cron", label: "Cron Parser", icon: CalendarClock },
         { id: "date-calc", label: "Date Calculator", icon: CalendarDays },
         { id: "mock-data", label: "Mock Data / Lorem", icon: Database },
+        { id: "qr", label: "QR Code", icon: QrCode },
       ],
     },
     {
@@ -366,6 +370,9 @@ const DevToolbox: React.FC = () => {
             )}
             {activeTool === "mock-data" && (
               <MockDataGenerator onCopy={handleCopy} copyStatus={copyStatus} />
+            )}
+            {activeTool === "qr" && (
+              <QrCodeTool onCopy={handleCopy} copyStatus={copyStatus} />
             )}
           </Suspense>
         </div>
