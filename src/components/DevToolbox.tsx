@@ -26,6 +26,7 @@ import {
   Braces,
   Terminal,
   Diff,
+  CalendarClock,
 } from "lucide-react";
 
 const JwtDecoder = lazy(() => import("./tools/JwtDecoder"));
@@ -60,6 +61,7 @@ const JsonConverter = lazy(() => import("./tools/JsonConverter"));
 const JsonToTypes = lazy(() => import("./tools/JsonToTypes"));
 const CurlConverter = lazy(() => import("./tools/CurlConverter"));
 const TextDiff = lazy(() => import("./tools/TextDiff"));
+const CronParser = lazy(() => import("./tools/CronParser"));
 
 type ToolType =
   | "jwt"
@@ -87,7 +89,8 @@ type ToolType =
   | "json-convert"
   | "json-types"
   | "curl"
-  | "text-diff";
+  | "text-diff"
+  | "cron";
 
 const DevToolbox: React.FC = () => {
   const [activeTool, setActiveTool] = useState<ToolType>("jwt");
@@ -134,6 +137,7 @@ const DevToolbox: React.FC = () => {
         { id: "test-player", label: "Test Players", icon: Users },
         { id: "password", label: "Password", icon: Lock },
         { id: "hash", label: "Hash Generator", icon: Hash },
+        { id: "cron", label: "Cron Parser", icon: CalendarClock },
       ],
     },
     {
@@ -315,6 +319,7 @@ const DevToolbox: React.FC = () => {
               <CurlConverter onCopy={handleCopy} copyStatus={copyStatus} />
             )}
             {activeTool === "text-diff" && <TextDiff />}
+            {activeTool === "cron" && <CronParser />}
           </Suspense>
         </div>
       </main>
