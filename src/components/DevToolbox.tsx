@@ -157,7 +157,7 @@ const DevToolbox: React.FC = () => {
         { id: "timestamp", label: "Timestamp", icon: Clock },
         { id: "test-player", label: "Test Players", icon: Users },
         { id: "password", label: "Password", icon: Lock },
-        { id: "hash", label: "Hash Generator", icon: Hash },
+        { id: "hash", label: "Hash / HMAC", icon: Hash },
         { id: "cron", label: "Cron Parser", icon: CalendarClock },
         { id: "date-calc", label: "Date Calculator", icon: CalendarDays },
         { id: "mock-data", label: "Mock Data / Lorem", icon: Database },
