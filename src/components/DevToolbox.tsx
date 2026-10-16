@@ -22,6 +22,7 @@ import {
   ChevronDown,
   ImagePlus,
   Percent,
+  Repeat,
 } from "lucide-react";
 
 const JwtDecoder = lazy(() => import("./tools/JwtDecoder"));
@@ -52,6 +53,7 @@ const ImagePlaceholderGenerator = lazy(
   () => import("./tools/ImagePlaceholderGenerator"),
 );
 const UrlEncoderDecoder = lazy(() => import("./tools/UrlEncoderDecoder"));
+const JsonConverter = lazy(() => import("./tools/JsonConverter"));
 
 type ToolType =
   | "jwt"
@@ -75,7 +77,8 @@ type ToolType =
   | "num-base"
   | "test-player"
   | "image-gen"
-  | "url-encode";
+  | "url-encode"
+  | "json-convert";
 
 const DevToolbox: React.FC = () => {
   const [activeTool, setActiveTool] = useState<ToolType>("jwt");
@@ -109,6 +112,7 @@ const DevToolbox: React.FC = () => {
         { id: "json", label: "JSON Formatter", icon: FileJson },
         { id: "json-extractor", label: "JSON Extractor", icon: ListFilter },
         { id: "json-diff", label: "JSON Comparison", icon: GitCompare },
+        { id: "json-convert", label: "JSON ⇄ YAML / CSV", icon: Repeat },
       ],
     },
     {
@@ -288,6 +292,9 @@ const DevToolbox: React.FC = () => {
             {activeTool === "image-gen" && <ImagePlaceholderGenerator />}
             {activeTool === "url-encode" && (
               <UrlEncoderDecoder onCopy={handleCopy} copyStatus={copyStatus} />
+            )}
+            {activeTool === "json-convert" && (
+              <JsonConverter onCopy={handleCopy} copyStatus={copyStatus} />
             )}
           </Suspense>
         </div>
