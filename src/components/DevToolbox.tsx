@@ -37,6 +37,7 @@ import {
   QrCode,
   BookOpen,
   KeyRound,
+  ShieldPlus,
 } from "lucide-react";
 
 const JwtDecoder = lazy(() => import("./tools/JwtDecoder"));
@@ -82,6 +83,7 @@ const MockDataGenerator = lazy(() => import("./tools/MockDataGenerator"));
 const QrCodeTool = lazy(() => import("./tools/QrCodeTool"));
 const MarkdownPreview = lazy(() => import("./tools/MarkdownPreview"));
 const ChmodCalculator = lazy(() => import("./tools/ChmodCalculator"));
+const JwtEncoder = lazy(() => import("./tools/JwtEncoder"));
 
 type ToolType =
   | "jwt"
@@ -120,7 +122,8 @@ type ToolType =
   | "mock-data"
   | "qr"
   | "markdown"
-  | "chmod";
+  | "chmod"
+  | "jwt-encode";
 
 const DevToolbox: React.FC = () => {
   const [activeTool, setActiveTool] = useState<ToolType>("jwt");
@@ -156,6 +159,7 @@ const DevToolbox: React.FC = () => {
         { id: "json-diff", label: "JSON Comparison", icon: GitCompare },
         { id: "json-convert", label: "JSON ⇄ YAML / CSV", icon: Repeat },
         { id: "json-types", label: "JSON → Types / Schema", icon: Braces },
+        { id: "jwt-encode", label: "JWT Encoder", icon: ShieldPlus },
       ],
     },
     {
@@ -387,6 +391,9 @@ const DevToolbox: React.FC = () => {
             )}
             {activeTool === "chmod" && (
               <ChmodCalculator onCopy={handleCopy} copyStatus={copyStatus} />
+            )}
+            {activeTool === "jwt-encode" && (
+              <JwtEncoder onCopy={handleCopy} copyStatus={copyStatus} />
             )}
           </Suspense>
         </div>
