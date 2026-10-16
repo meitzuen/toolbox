@@ -25,6 +25,7 @@ import {
   Repeat,
   Braces,
   Terminal,
+  Diff,
 } from "lucide-react";
 
 const JwtDecoder = lazy(() => import("./tools/JwtDecoder"));
@@ -58,6 +59,7 @@ const UrlEncoderDecoder = lazy(() => import("./tools/UrlEncoderDecoder"));
 const JsonConverter = lazy(() => import("./tools/JsonConverter"));
 const JsonToTypes = lazy(() => import("./tools/JsonToTypes"));
 const CurlConverter = lazy(() => import("./tools/CurlConverter"));
+const TextDiff = lazy(() => import("./tools/TextDiff"));
 
 type ToolType =
   | "jwt"
@@ -84,7 +86,8 @@ type ToolType =
   | "url-encode"
   | "json-convert"
   | "json-types"
-  | "curl";
+  | "curl"
+  | "text-diff";
 
 const DevToolbox: React.FC = () => {
   const [activeTool, setActiveTool] = useState<ToolType>("jwt");
@@ -156,6 +159,7 @@ const DevToolbox: React.FC = () => {
         { id: "list-pretty", label: "List Prettifier", icon: Wand2 },
         { id: "url-gen", label: "URL Combinator", icon: Link2 },
         { id: "regex", label: "Regex Validator", icon: SearchCode },
+        { id: "text-diff", label: "Text Diff", icon: Diff },
       ],
     },
     {
@@ -310,6 +314,7 @@ const DevToolbox: React.FC = () => {
             {activeTool === "curl" && (
               <CurlConverter onCopy={handleCopy} copyStatus={copyStatus} />
             )}
+            {activeTool === "text-diff" && <TextDiff />}
           </Suspense>
         </div>
       </main>
