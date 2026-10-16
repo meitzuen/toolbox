@@ -38,6 +38,7 @@ import {
   BookOpen,
   KeyRound,
   ShieldPlus,
+  FileImage,
 } from "lucide-react";
 
 const JwtDecoder = lazy(() => import("./tools/JwtDecoder"));
@@ -84,6 +85,7 @@ const QrCodeTool = lazy(() => import("./tools/QrCodeTool"));
 const MarkdownPreview = lazy(() => import("./tools/MarkdownPreview"));
 const ChmodCalculator = lazy(() => import("./tools/ChmodCalculator"));
 const JwtEncoder = lazy(() => import("./tools/JwtEncoder"));
+const ImageBase64 = lazy(() => import("./tools/ImageBase64"));
 
 type ToolType =
   | "jwt"
@@ -123,7 +125,8 @@ type ToolType =
   | "qr"
   | "markdown"
   | "chmod"
-  | "jwt-encode";
+  | "jwt-encode"
+  | "image-b64";
 
 const DevToolbox: React.FC = () => {
   const [activeTool, setActiveTool] = useState<ToolType>("jwt");
@@ -225,6 +228,7 @@ const DevToolbox: React.FC = () => {
       color: "#06b6d4",
       items: [
         { id: "image-gen", label: "Test Image Generator", icon: ImagePlus },
+        { id: "image-b64", label: "Image ⇄ Base64", icon: FileImage },
       ],
     },
   ];
@@ -394,6 +398,9 @@ const DevToolbox: React.FC = () => {
             )}
             {activeTool === "jwt-encode" && (
               <JwtEncoder onCopy={handleCopy} copyStatus={copyStatus} />
+            )}
+            {activeTool === "image-b64" && (
+              <ImageBase64 onCopy={handleCopy} copyStatus={copyStatus} />
             )}
           </Suspense>
         </div>
