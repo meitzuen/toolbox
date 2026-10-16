@@ -31,6 +31,7 @@ import {
   CalendarDays,
   Palette,
   Code,
+  Sigma,
 } from "lucide-react";
 
 const JwtDecoder = lazy(() => import("./tools/JwtDecoder"));
@@ -70,6 +71,7 @@ const UrlParser = lazy(() => import("./tools/UrlParser"));
 const DateCalculator = lazy(() => import("./tools/DateCalculator"));
 const ColorConverter = lazy(() => import("./tools/ColorConverter"));
 const CodeFormatter = lazy(() => import("./tools/CodeFormatter"));
+const EntityEscape = lazy(() => import("./tools/EntityEscape"));
 
 type ToolType =
   | "jwt"
@@ -102,7 +104,8 @@ type ToolType =
   | "url-parser"
   | "date-calc"
   | "color"
-  | "code-format";
+  | "code-format"
+  | "entity";
 
 const DevToolbox: React.FC = () => {
   const [activeTool, setActiveTool] = useState<ToolType>("jwt");
@@ -190,6 +193,7 @@ const DevToolbox: React.FC = () => {
         { id: "text-case", label: "Case Converter", icon: Type },
         { id: "url-parser", label: "URL Parser", icon: Globe },
         { id: "color", label: "Color Converter", icon: Palette },
+        { id: "entity", label: "Entity / Unicode Escape", icon: Sigma },
       ],
     },
     {
@@ -345,6 +349,9 @@ const DevToolbox: React.FC = () => {
             )}
             {activeTool === "code-format" && (
               <CodeFormatter onCopy={handleCopy} copyStatus={copyStatus} />
+            )}
+            {activeTool === "entity" && (
+              <EntityEscape onCopy={handleCopy} copyStatus={copyStatus} />
             )}
           </Suspense>
         </div>
